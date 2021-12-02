@@ -1,16 +1,14 @@
-import {Module} from "@nestjs/common";
-import {TrackModule} from "./track/track.module";
-import {MongooseModule} from "@nestjs/mongoose";
-import {FileModule} from "./file/file.module";
-import * as path from 'path'
-import {ServeStaticModule} from "@nestjs/serve-static";
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { MongooseModule } from '@nestjs/mongoose'
+
+import { config } from './config/config'
+import { mongooseConfig } from './config/mongoose.config'
 
 @Module({
     imports: [
-        ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
-        MongooseModule.forRoot('mongodb+srv://admin:admin@cluster0.oeudk.mongodb.net/music-platform?retryWrites=true&w=majority'),
-        TrackModule,
-        FileModule
-    ]
+        ConfigModule.forRoot(config),
+        MongooseModule.forRootAsync(mongooseConfig),
+    ],
 })
 export class AppModule {}
