@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import Link from "next/link"
 
 
 const CardWrapper = styled.div`
@@ -20,9 +21,11 @@ export default function Card() {
             Some quick example text to build on the card title and make up the
             bulk of the card's content.
           </p>
-          <a href="#" class="btn btn-primary">
-            Go somewhere
-          </a>
+          <Link href="/product/1">
+            <a class="btn btn-primary">
+                Go somewhere
+            </a>
+          </Link>
         </div>
       </div>
     </CardWrapper>
