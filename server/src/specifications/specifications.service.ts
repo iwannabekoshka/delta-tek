@@ -5,12 +5,11 @@ import {
     NotFoundException,
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, Types } from 'mongoose'
+import { Model, ObjectId } from 'mongoose'
 
 import { SpecificationDTO } from './dtos/specification.dto'
 import { Specification, SpecificationDocument } from './schemas/specification.schema'
 
-const { ObjectId } = Types
 
 @Injectable()
 export class SpecificationsService {
@@ -35,14 +34,22 @@ export class SpecificationsService {
     async getSpecifications(): Promise<Specification[]> {
         try {
             const specifications = await this._specificationModel.find()
-
             if (specifications.length <= 0) {
-                throw new NotFoundException(`Couldn't find specifications`)
+                new NotFoundException(`Couldn't find specifications`)
             }
-
             return await specifications
         } catch (error) {
             this._logger.error(error, 'getSpecifications method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
+    async deleteSpecification(id: ObjectId): Promise<Specification> {
+        try {
+            const specification = await this._specificationModel.findByIdAndDelete(id)
+            return  specification
+        } catch (error) {
+            this._logger.error(error, 'deleteSpecification method error')
             throw new InternalServerErrorException(error)
         }
     }
