@@ -15,12 +15,11 @@ export class SpecificationsController {
         return this._specificationsService.createSpecification(dto)
     }
 
-    // @Get()
-    // getAll(@Query('count') count: number,
-    //        @Query('offset') offset: number) {
-    //     return this.trackService.getAll(count, offset)
-    // }
-    //
+    @Get()
+    getSpecifications() {
+        return this._specificationsService.getSpecifications()
+    }
+
     // @Get('/search')
     // search(@Query('query') query: string) {
     //     return this.trackService.search(query)

@@ -32,4 +32,19 @@ export class SpecificationsService {
         }
     }
 
+    async getSpecifications(): Promise<Specification[]> {
+        try {
+            const specifications = await this._specificationModel.find()
+
+            if (specifications.length <= 0) {
+                throw new NotFoundException(`Couldn't find specifications`)
+            }
+
+            return await specifications
+        } catch (error) {
+            this._logger.error(error, 'getSpecifications method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
 }
