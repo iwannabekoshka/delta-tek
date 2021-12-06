@@ -3,6 +3,7 @@ import Head from "next/head";
 import Slider from "react-slick";
 import styled from "styled-components";
 import Section from "../layouts/Section";
+import Link from "next/link";
 
 const CardWrapper = styled.div`
   padding: 20px;
@@ -66,9 +67,11 @@ const Index = () => {
                       Some quick example text to build on the card title and
                       make up the bulk of the card's content.
                     </p>
-                    <a href="#" class="btn btn-primary">
-                      Go somewhere
-                    </a>
+                    <Link href="/products/1">
+                        <a class="btn btn-primary">
+                        Go somewhere
+                        </a>
+                    </Link>
                   </div>
                 </div>
               </CardWrapper>
