@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
 import { ObjectId } from 'mongoose'
-import { FileFieldsInterceptor } from '@nestjs/platform-express'
 
 import { SpecificationsService } from './specifications.service'
 import { SpecificationDTO } from './dtos/specification.dto'
@@ -11,7 +10,7 @@ export class SpecificationsController {
     }
 
     @Post()
-    create(@Body() dto: SpecificationDTO) {
+    createSpecification(@Body() dto: SpecificationDTO) {
         return this._specificationsService.createSpecification(dto)
     }
 
