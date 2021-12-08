@@ -1,0 +1,1 @@
+React Alice Carousel - https://github.com/maxmarinich/react-alice-carousel
