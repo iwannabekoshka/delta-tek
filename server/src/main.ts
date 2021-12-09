@@ -11,7 +11,7 @@ const DEFAULT_APP_PORT = 3000
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule)
-
+    app.setGlobalPrefix('api')
     const configService = app.get(ConfigService)
 
     const port = configService.get('PORT') || DEFAULT_APP_PORT
