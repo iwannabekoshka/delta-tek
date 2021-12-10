@@ -7,6 +7,7 @@ import { mongooseConfig } from './config/mongoose.config'
 
 import { SpecificationModule } from './specifications/specifications.module'
 import { RolesModule } from './roles/roles.module'
+import { AdminsModule } from './admins/admins.module'
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { RolesModule } from './roles/roles.module'
         MongooseModule.forRootAsync(mongooseConfig),
         SpecificationModule,
         RolesModule,
+        AdminsModule,
     ],
 })
 export class AppModule {

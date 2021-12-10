@@ -57,10 +57,23 @@ export class RolesService {
         }
     }
 
+    async getRoleByName(role_name: string): Promise<Role> {
+        try {
+            const role = await this._roleModel.findOne({name: role_name})
+            if (!role) {
+                new NotFoundException(`Couldn't find role`)
+            }
+            return role
+        } catch (error) {
+            this._logger.error(error, 'getRoleById method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     async deleteRole(id: ObjectId): Promise<Role> {
         try {
             const role = await this._roleModel.findByIdAndDelete(id)
-            return  role
+            return role
         } catch (error) {
             this._logger.error(error, 'deleteRole method error')
             throw new InternalServerErrorException(error)

@@ -25,7 +25,7 @@ export class RolesController {
     }
 
     @Delete(':id')
-    deleteSpecification(@Param('id') id: ObjectId) {
+    deleteRole(@Param('id') id: ObjectId) {
         return this._rolesService.deleteRole(id)
     }
 }

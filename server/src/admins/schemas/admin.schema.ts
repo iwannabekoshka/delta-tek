@@ -15,7 +15,7 @@ export class Admin {
     name: string
 
     @Prop({type: String, required: true })
-    hashedPassword: string
+    password: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Role' })
     role: Role

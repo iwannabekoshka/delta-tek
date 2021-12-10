@@ -9,7 +9,7 @@ export class Role {
 
     _id: string
 
-    @Prop({type: String, required: true })
+    @Prop({type: String, required: true, unique: true })
     name: string
 
 }
