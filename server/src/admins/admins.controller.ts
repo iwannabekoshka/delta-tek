@@ -14,11 +14,11 @@ export class AdminsController {
         return this._adminsService.createAdmin(dto)
     }
 
-    // @Get()
-    // getRoles() {
-    //     return this._adminsService.getRoles()
-    // }
-    //
+    @Get()
+    getAdmins() {
+        return this._adminsService.getAdmins()
+    }
+
     // @Get(':id')
     // getRoleById(@Param('id') id: ObjectId) {
     //     return this._adminsService.getRoleById(id)

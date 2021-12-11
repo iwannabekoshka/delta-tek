@@ -36,11 +36,11 @@ export class AdminsService {
 
     async getAdmins(): Promise<Admin[]> {
         try {
-            const roles = await this._adminModel.find()
-            if (roles.length <= 0) {
-                new NotFoundException(`Couldn't find roles`)
+            const admins = await this._adminModel.find().populate('role')
+            if (admins.length <= 0) {
+                new NotFoundException(`Couldn't find admins`)
             }
-            return await roles
+            return await admins
         } catch (error) {
             this._logger.error(error, 'getAdmins method error')
             throw new InternalServerErrorException(error)
