@@ -55,6 +55,21 @@ export class AdminsService {
         }
     }
 
+    async updateAdmin(id: ObjectId, password: string): Promise<Admin> {
+        try {
+            const admin = await this._adminModel.updateOne({_id: id}, {
+                password
+            })
+            if (!admin) {
+                new NotFoundException(`Couldn't find admin`)
+            }
+            return await admin
+        } catch (error) {
+            this._logger.error(error, 'updateAdmin method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     async deleteAdmin(id: ObjectId): Promise<Admin> {
         try {
             return await this._adminModel.findByIdAndDelete(id)

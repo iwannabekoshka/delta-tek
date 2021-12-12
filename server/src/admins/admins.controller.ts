@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { ObjectId } from 'mongoose'
 
 import { AdminsService } from './admins.service'
@@ -22,6 +22,11 @@ export class AdminsController {
     @Get(':id')
     getAdminById(@Param('id') id: ObjectId) {
         return this._adminsService.getAdminById(id)
+    }
+
+    @Put(':id')
+    updateAdmin(@Param('id') id: ObjectId, @Body() dto: AdminDto) {
+        return this._adminsService.updateAdmin(id, dto.password)
     }
 
     @Delete(':id')
