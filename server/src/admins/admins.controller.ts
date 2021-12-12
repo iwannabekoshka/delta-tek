@@ -19,13 +19,13 @@ export class AdminsController {
         return this._adminsService.getAdmins()
     }
 
-    // @Get(':id')
-    // getRoleById(@Param('id') id: ObjectId) {
-    //     return this._adminsService.getRoleById(id)
-    // }
-    //
-    // @Delete(':id')
-    // deleteRole(@Param('id') id: ObjectId) {
-    //     return this._adminsService.deleteRole(id)
-    // }
+    @Get(':id')
+    getAdminById(@Param('id') id: ObjectId) {
+        return this._adminsService.getAdminById(id)
+    }
+
+    @Delete(':id')
+    deleteAdmin(@Param('id') id: ObjectId) {
+        return this._adminsService.deleteAdmin(id)
+    }
 }

@@ -1,9 +1,4 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    Logger,
-    NotFoundException,
-} from '@nestjs/common'
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, ObjectId } from 'mongoose'
 
@@ -49,11 +44,11 @@ export class AdminsService {
 
     async getAdminById(id: ObjectId): Promise<Admin> {
         try {
-            const role = await this._adminModel.findById(id)
-            if (!role) {
-                new NotFoundException(`Couldn't find role`)
+            const admin = await this._adminModel.findById(id)
+            if (!admin) {
+                new NotFoundException(`Couldn't find admin`)
             }
-            return await role
+            return await admin
         } catch (error) {
             this._logger.error(error, 'getAdminById method error')
             throw new InternalServerErrorException(error)
@@ -62,8 +57,7 @@ export class AdminsService {
 
     async deleteAdmin(id: ObjectId): Promise<Admin> {
         try {
-            const role = await this._adminModel.findByIdAndDelete(id)
-            return role
+            return await this._adminModel.findByIdAndDelete(id)
         } catch (error) {
             this._logger.error(error, 'deleteAdmin method error')
             throw new InternalServerErrorException(error)
