@@ -24,11 +24,11 @@ export class ProductsController {
         return this._productsService.getProductById(id)
     }
 
-    // @Put(':id')
-    // updateAdmin(@Param('id') id: ObjectId, @Body() dto: ProductDto) {
-    //     return this._adminsService.updateAdmin(id, dto.password)
-    // }
-    //
+    @Put(':id')
+    updateProduct(@Param('id') id: ObjectId, @Body() dto: ProductDto) {
+        return this._productsService.updateProduct(id, dto)
+    }
+
     @Delete(':id')
     deleteProduct(@Param('id') id: ObjectId) {
         return this._productsService.deleteProduct(id)

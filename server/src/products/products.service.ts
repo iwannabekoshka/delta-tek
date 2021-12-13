@@ -71,21 +71,34 @@ export class ProductsService {
         }
     }
 
-    // async updateAdmin(id: ObjectId, password: string): Promise<Product> {
-    //     try {
-    //         const admin = await this._adminModel.updateOne({_id: id}, {
-    //             password
-    //         })
-    //         if (!admin) {
-    //             new NotFoundException(`Couldn't find admin`)
-    //         }
-    //         return await admin
-    //     } catch (error) {
-    //         this._logger.error(error, 'updateAdmin method error')
-    //         throw new InternalServerErrorException(error)
-    //     }
-    // }
-    //
+    async updateProduct(id: ObjectId, input: ProductDto): Promise<Product> {
+        const { name, description, image, price, specifications, admin_id } = input
+        try {
+            const admin = await this._adminsService.getAdminById(admin_id)
+            const specifications_arr = []
+            for (const item of specifications) {
+                const { value, name } = item
+                const specification = await this._specificationsService.getSpecificationByName(name)
+                specifications_arr.push({ _id: specification._id, name: specification.name, value })
+            }
+            const product = await this._productModel.updateOne({_id: id}, {
+                name,
+                description,
+                image,
+                price,
+                specifications: specifications_arr,
+                admin,
+            })
+            if (!product) {
+                new NotFoundException(`Couldn't find product`)
+            }
+            return await product
+        } catch (error) {
+            this._logger.error(error, 'updateProduct method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     async deleteProduct(id: ObjectId): Promise<Product> {
         try {
             return await this._productModel.findByIdAndDelete(id)
