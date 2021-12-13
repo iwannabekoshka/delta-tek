@@ -10,6 +10,7 @@ import { Specification, SpecificationSchema } from './schemas/specification.sche
     ],
     controllers: [SpecificationsController],
     providers: [SpecificationsService],
+    exports: [SpecificationsService],
 })
-export class SpecificationModule {
+export class SpecificationsModule {
 }

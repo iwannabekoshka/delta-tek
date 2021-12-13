@@ -44,10 +44,25 @@ export class SpecificationsService {
         }
     }
 
+    async getSpecificationByName(name): Promise<Specification> {
+        try {
+            const specification = await this._specificationModel.findOne({
+                name,
+            })
+            if (!specification) {
+                new NotFoundException(`Couldn't find specification`)
+            }
+            return await specification
+        } catch (error) {
+            this._logger.error(error, 'getSpecifications method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     async deleteSpecification(id: ObjectId): Promise<Specification> {
         try {
             const specification = await this._specificationModel.findByIdAndDelete(id)
-            return  specification
+            return specification
         } catch (error) {
             this._logger.error(error, 'deleteSpecification method error')
             throw new InternalServerErrorException(error)
