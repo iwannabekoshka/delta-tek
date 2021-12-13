@@ -27,7 +27,6 @@ export class ProductsService {
             for (const item of specifications) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
-                this._logger.log(specification)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
 
@@ -87,13 +86,13 @@ export class ProductsService {
     //     }
     // }
     //
-    // async deleteAdmin(id: ObjectId): Promise<Product> {
-    //     try {
-    //         return await this._adminModel.findByIdAndDelete(id)
-    //     } catch (error) {
-    //         this._logger.error(error, 'deleteAdmin method error')
-    //         throw new InternalServerErrorException(error)
-    //     }
-    // }
+    async deleteProduct(id: ObjectId): Promise<Product> {
+        try {
+            return await this._productModel.findByIdAndDelete(id)
+        } catch (error) {
+            this._logger.error(error, 'deleteProduct method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
 
 }

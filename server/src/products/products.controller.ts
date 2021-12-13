@@ -29,8 +29,8 @@ export class ProductsController {
     //     return this._adminsService.updateAdmin(id, dto.password)
     // }
     //
-    // @Delete(':id')
-    // deleteAdmin(@Param('id') id: ObjectId) {
-    //     return this._adminsService.deleteAdmin(id)
-    // }
+    @Delete(':id')
+    deleteProduct(@Param('id') id: ObjectId) {
+        return this._productsService.deleteProduct(id)
+    }
 }
