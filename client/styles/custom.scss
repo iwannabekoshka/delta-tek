@@ -23,4 +23,7 @@ $link-decoration: none;
     }
 }
 
+.alice-carousel__wrapper {
+    height: auto !important;
+}
 @import '~bootstrap/scss/bootstrap.scss'

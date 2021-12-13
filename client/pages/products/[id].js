@@ -1,5 +1,5 @@
 import Layout from "../../layouts/Layout";
-import Section from "../../layouts/Section";
+import Section from "../../components/Section";
 
 
 export default function Product() {

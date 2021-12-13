@@ -4,3 +4,7 @@ body {
 .slick-next:before, .slick-prev:before {
     color: black;
 }
+
+.alice-carousel__stage {
+    display: flex;
+}

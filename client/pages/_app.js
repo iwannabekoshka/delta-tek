@@ -4,10 +4,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
-
-      <style jsx global>{`
-        $primary: red !important;
-      `}</style>
     </>
   )
 }

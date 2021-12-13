@@ -4,11 +4,11 @@ import ProductCard from '../components/ProductCard'
 
 
 const items = [
-    <ProductCard />,
-    <ProductCard />,
-    <ProductCard />,
-    <ProductCard />,
-    <ProductCard />,
+    <ProductCard id="1" />,
+    <ProductCard id="2" />,
+    <ProductCard id="3" />,
+    <ProductCard id="4" />,
+    <ProductCard id="5" />,
 ]
 const responsive = {
     0: { items: 1 },
@@ -21,19 +21,18 @@ export default function ProductsCarousel() {
         <>
         <div className="wrap">
             <AliceCarousel 
-            items={items} 
-            responsive={responsive} // quantity of slides depending on resolution
-            disableDotsControls={true}
-            infinite={true}
-            autoPlay={true} 
-            autoPlayInterval={2500}
+                items={items} 
+                responsive={responsive} // quantity of slides depending on resolution
+                disableDotsControls={true}
+                infinite={true}
+                autoPlay={false} 
+                autoPlayInterval={2500}
+                autoHeight={true}
             />
         </div>
         
         <style jsx>{`
-          .wrap {
-            //height: 20vh;
-          }  
+            
         `}</style>
         </>
     )
