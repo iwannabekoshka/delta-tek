@@ -14,16 +14,16 @@ export class ProductsController {
         return this._productsService.createProduct(dto)
     }
 
-    // @Get()
-    // getAdmins() {
-    //     return this._adminsService.getAdmins()
-    // }
-    //
-    // @Get(':id')
-    // getAdminById(@Param('id') id: ObjectId) {
-    //     return this._adminsService.getAdminById(id)
-    // }
-    //
+    @Get()
+    getProducts() {
+        return this._productsService.getProducts()
+    }
+
+    @Get(':id')
+    getProductById(@Param('id') id: ObjectId) {
+        return this._productsService.getProductById(id)
+    }
+
     // @Put(':id')
     // updateAdmin(@Param('id') id: ObjectId, @Body() dto: ProductDto) {
     //     return this._adminsService.updateAdmin(id, dto.password)

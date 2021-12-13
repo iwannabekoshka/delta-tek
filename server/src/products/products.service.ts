@@ -27,8 +27,10 @@ export class ProductsService {
             for (const item of specifications) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
-                specifications_arr.push({ ...specification, value })
+                this._logger.log(specification)
+                specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
+
             const product = new this._productModel({
                 name,
                 description,
@@ -44,32 +46,32 @@ export class ProductsService {
         }
     }
 
-    // async getAdmins(): Promise<Product[]> {
-    //     try {
-    //         const admins = await this._adminModel.find().populate('role')
-    //         if (admins.length <= 0) {
-    //             new NotFoundException(`Couldn't find admins`)
-    //         }
-    //         return await admins
-    //     } catch (error) {
-    //         this._logger.error(error, 'getAdmins method error')
-    //         throw new InternalServerErrorException(error)
-    //     }
-    // }
-    //
-    // async getAdminById(id: ObjectId): Promise<Product> {
-    //     try {
-    //         const admin = await this._adminModel.findById(id)
-    //         if (!admin) {
-    //             new NotFoundException(`Couldn't find admin`)
-    //         }
-    //         return await admin
-    //     } catch (error) {
-    //         this._logger.error(error, 'getAdminById method error')
-    //         throw new InternalServerErrorException(error)
-    //     }
-    // }
-    //
+    async getProducts(): Promise<Product[]> {
+        try {
+            const products = await this._productModel.find().populate('admin')
+            if (products.length <= 0) {
+                new NotFoundException(`Couldn't find products`)
+            }
+            return await products
+        } catch (error) {
+            this._logger.error(error, 'getProducts method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
+    async getProductById(id: ObjectId): Promise<Product> {
+        try {
+            const product = await this._productModel.findById(id).populate('admin')
+            if (!product) {
+                new NotFoundException(`Couldn't find product`)
+            }
+            return await product
+        } catch (error) {
+            this._logger.error(error, 'getProductById method error')
+            throw new InternalServerErrorException(error)
+        }
+    }
+
     // async updateAdmin(id: ObjectId, password: string): Promise<Product> {
     //     try {
     //         const admin = await this._adminModel.updateOne({_id: id}, {

@@ -7,8 +7,14 @@ import { Specification } from '../../specifications/schemas/specification.schema
 @Schema()
 export class ProductSpecification {
 
-    @Prop({ type: Types.ObjectId, required: true, ref: 'Specification' })
-    specification: Specification
+    // @Prop({ type: Types.ObjectId, required: true, ref: 'Specification' })
+    // specification: Specification
+
+    @Prop({ type: Types.ObjectId, required: true })
+    _id: string
+
+    @Prop({ type: String, required: true })
+    name: string
 
     @Prop({ type: String, required: true })
     value: string
@@ -36,7 +42,7 @@ export class Product {
     price: number
 
     @Prop({ type: ProductSpecification } )
-    specifications: ProductSpecification[]
+    specifications: Array<ProductSpecification>
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Admin' })
     admin: Admin
