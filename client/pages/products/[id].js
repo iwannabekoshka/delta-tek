@@ -7,8 +7,6 @@ export default function Product() {
         <Layout>
             <Section>
                 <div className="container">
-                    <h1>Product</h1>
-
                     <div className="row">
                         <div className="col">
                             <img src="http://via.placeholder.com/300" alt="" className="img-fluid" />

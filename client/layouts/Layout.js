@@ -1,11 +1,11 @@
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
-export default function Layout({ children }) {
+export default function Layout({ children, cartCounter }) {
     return (
         <>
             <div className="layout">
-                <Header />
+                <Header cartCounter={cartCounter}/>
                     <div className="wrapper">{children}</div>
                 <Footer />
             </div>

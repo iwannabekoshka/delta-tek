@@ -6,7 +6,8 @@ export default function ProductCard({
     imageUrl='img/flashhider.png', 
     title='Flashhider', 
     text='Some quick example text to build on the card title and make up the bulk of the card\'s content.', 
-    id='1' }) {
+    id='1',
+    addCart }) {
 
     if (id == 2) {
         imageUrl='img/flashhider2.png'
@@ -31,9 +32,7 @@ export default function ProductCard({
                             <Button variant="primary">Read more...</Button>
                         </Link>
 
-                        <Link href={`/`}>
-                            <Button variant="primary">Add to Cart</Button>
-                        </Link>
+                        <Button variant="primary" onClick={addCart}>Add to Cart</Button>
                     </div>
                     
                 </Card.Body>

@@ -26,4 +26,11 @@ $link-decoration: none;
 .alice-carousel__wrapper {
     height: auto !important;
 }
+
+.card-text {
+    min-height: 36px;
+}
+.alice-carousel__prev-btn, .alice-carousel__next-btn {
+    font-size: 1.5em;
+}
 @import '~bootstrap/scss/bootstrap.scss'

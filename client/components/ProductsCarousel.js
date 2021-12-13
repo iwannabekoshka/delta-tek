@@ -12,11 +12,12 @@ const items = [
 ]
 const responsive = {
     0: { items: 1 },
-    568: { items: 2 },
+    568: { items: 1 },
+    768: { items: 2 },
     1024: { items: 3 },
 }
 
-export default function ProductsCarousel() {
+export default function ProductsCarousel( {addCart} ) {
     return (
         <>
         <div className="wrap">
@@ -28,6 +29,7 @@ export default function ProductsCarousel() {
                 autoPlay={false} 
                 autoPlayInterval={2500}
                 autoHeight={true}
+                addCart={addCart}
             />
         </div>
         
