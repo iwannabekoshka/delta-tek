@@ -3,13 +3,7 @@ import AliceCarousel from 'react-alice-carousel'
 import ProductCard from '../components/ProductCard'
 
 
-const items = [
-    <ProductCard id="1" />,
-    <ProductCard id="2" />,
-    <ProductCard id="3" />,
-    <ProductCard id="4" />,
-    <ProductCard id="5" />,
-]
+
 const responsive = {
     0: { items: 1 },
     568: { items: 1 },
@@ -18,6 +12,14 @@ const responsive = {
 }
 
 export default function ProductsCarousel( {addCart} ) {
+    const items = [
+        <ProductCard id="1" addCart={addCart}/>,
+        <ProductCard id="2" addCart={addCart}/>,
+        <ProductCard id="3" addCart={addCart}/>,
+        <ProductCard id="4" addCart={addCart}/>,
+        <ProductCard id="5" addCart={addCart}/>,
+    ]
+
     return (
         <>
         <div className="wrap">
@@ -29,7 +31,6 @@ export default function ProductsCarousel( {addCart} ) {
                 autoPlay={false} 
                 autoPlayInterval={2500}
                 autoHeight={true}
-                addCart={addCart}
             />
         </div>
         
