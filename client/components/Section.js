@@ -1,9 +1,9 @@
 import { Container } from 'react-bootstrap'
 
-export default function Section({title="Title", children}) {
+export default function Section({title="Title", border=true, children}) {
     return (
         <>
-            <section className="border-bottom">
+            <section className={border && 'border-bottom'}>
                 <Container>
                     <h2>{title}</h2>
                     <div className="section__inner">
