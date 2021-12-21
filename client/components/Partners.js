@@ -64,6 +64,8 @@ export default function Partners() {
 				padding: 1rem;
 				border-radius: 8px;
 				
+				background-color: #fff;
+				
 				box-shadow: 0 2px 4px rgba(0,0,0, .2);
 			}
 		`}</style>

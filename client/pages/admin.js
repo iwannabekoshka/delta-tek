@@ -28,7 +28,7 @@ export default function Admin() {
             :
                 <Tabs defaultActiveKey="goods" className="mb-3">
                     <Tab eventKey="goods" title="Товары">
-                        <ul className="list-group">
+                        <ul className="list-group shadow-sm rounded-2">
                             <li className="list-group-item">1 Товар</li>
                             <li className="list-group-item">2</li>
                             <li className="list-group-item">3</li>
@@ -37,7 +37,7 @@ export default function Admin() {
                         </ul>
                     </Tab>
                     <Tab eventKey="orders" title="Заказы">
-                        <ul className="list-group">
+                        <ul className="list-group shadow-sm rounded-2">
                             <li className="list-group-item">1 заказ</li>
                             <li className="list-group-item">2</li>
                             <li className="list-group-item">3</li>

@@ -16,7 +16,7 @@ export default function Product(props) {
 						</div>
 					</div>
 					<div className="col-12 col-md-6">
-						<ul className="list-group list-group-flush">
+						<ul className="list-group list-group-flush border shadow-sm rounded-2">
 							<li className="list-group-item">An item</li>
 							<li className="list-group-item">A second item</li>
 							<li className="list-group-item">A third item</li>
@@ -26,7 +26,7 @@ export default function Product(props) {
 					</div>
 				</div>
 				<div className="row">
-					<p className="item-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, blanditiis cum dolore illo iste non recusandae sequi veritatis? Doloribus, iure?</p>
+					<p className="item-text border shadow-sm rounded-2 p-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, blanditiis cum dolore illo iste non recusandae sequi veritatis? Doloribus, iure?</p>
 				</div>
 			</div>
 		</Section>
