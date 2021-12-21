@@ -1,56 +1,56 @@
 import Link from 'next/link'
-import { Card, Button } from 'react-bootstrap'
 
+export default function ProductCard(props) {
+	const addCartItem = () => {
+		props.addCartItem(props.id)
+	}
 
-export default function ProductCard({ 
-    imageUrl='img/flashhider.png', 
-    title='Flashhider', 
-    text='Some quick example text to build on the card title and make up the bulk of the card\'s content.', 
-    id='1',
-    addCart }) {
+	return (
+		<>
+			<div className="card">
+				<div className="card-img" />
+				<div className="card-body">
+					<h5 className="card-title">{props.title}</h5>
+					<p className="card-text">{props.text}</p>
+					<div className="card-buttons">
+						<Link href={`/product/${props.id}`}>
+							<a className="btn btn-primary">Read more</a>
+						</Link>
+						<button className="btn btn-success" onClick={addCartItem}>Add to cart</button>
+					</div>
+				</div>
+			</div>
 
-    if (id == 2) {
-        imageUrl='img/flashhider2.png'
-        text='lorem ipsum 25'
-    }
-    if (id == 3) {
-        imageUrl='img/flashhider3.png'
-    }
-
-
-    return (
-        <div className="p-2">
-            <Card className="rounded-0">
-                <div className="card-img-wrapper">
-                    <img src={imageUrl} />
-                </div>
-                <Card.Body className="d-flex flex-column">
-                    <Card.Title>{title}</Card.Title>
-                    <Card.Text className="h-100">{text}</Card.Text>
-                    <div className="buttons d-flex justify-content-between">
-                        <Link href={`/products/${id}`}>
-                            <Button variant="primary">Read more...</Button>
-                        </Link>
-
-                        <Button variant="primary" onClick={addCart}>Add to Cart</Button>
-                    </div>
-                    
-                </Card.Body>
-            </Card>
-
-            <style jsx>{`
-                .card-img-wrapper {
-                    height: 300px;
-
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .card-img-wrapper img {
-                    max-width: 100%;
-                    max-height: 100%;
-                }
-            `}</style>
-        </div>
-    )
+			<style jsx>{`
+				.card {
+					height: 100%;
+				}
+				.card-img {
+					height: 400px;
+					background-image: url(${props.img || '/img/flashhider.png'});
+					background-size: 100%;
+					background-position: center;
+					background-repeat: no-repeat;
+				}
+				@media (min-width: 768px) {
+					.card-img {
+						height: 300px;
+                      	background-size: 80%;
+                      	background-position: top;
+					}
+				}
+				.card-body {
+					display: flex;
+					flex-direction: column;
+				}
+				.card-text {
+					flex-grow: 1;
+				}
+				.card-buttons {
+					display: flex;
+					justify-content: space-between;
+				}
+			`}</style>
+		</>
+	)
 }
