@@ -8,21 +8,21 @@ import {useState} from "react";
 export default function Home(props) {
     return (
         <>
-                <Section title="Our products">
-                    <div className="container">
-                        <Carousel addCartItem={props.addCartItem}/>
-                    </div>
-                </Section>
-                <Section title="Contacts">
-                    <div className="container">
-                        <Contacts />
-                    </div>
-                </Section>
-                <Section title="Partners">
-                    <div className="container">
-                        <Partners />
-                    </div>
-                </Section>
+            <Section title="Our products">
+                <div className="container">
+                    <Carousel addCartItem={props.addCartItem} cartItems={props.cartItems}/>
+                </div>
+            </Section>
+            <Section title="Contacts">
+                <div className="container">
+                    <Contacts/>
+                </div>
+            </Section>
+            <Section title="Partners">
+                <div className="container">
+                    <Partners />
+                </div>
+            </Section>
         </>
     )
 }

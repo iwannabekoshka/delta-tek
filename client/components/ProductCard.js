@@ -16,7 +16,9 @@ export default function ProductCard(props) {
 						<Link href={`/product/${props.id}`}>
 							<a className="btn btn-primary">Read more</a>
 						</Link>
-						<button className="btn btn-success" onClick={addCartItem}>Add to cart</button>
+						<button className={`btn btn-success ${props.inCart && 'disabled'}`} onClick={addCartItem}>
+							{props.inCart ? 'In Cart' : 'Add to Cart'}
+						</button>
 					</div>
 				</div>
 			</div>

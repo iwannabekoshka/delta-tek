@@ -30,7 +30,12 @@ function MyApp({Component, pageProps}) {
 	return (
 		<>
 			<Layout cartItems={cartItems}>
-				<Component {...pageProps} addCartItem={addCartItem} removeItem={removeItem}/>
+				<Component
+					{...pageProps}
+					addCartItem={addCartItem}
+					removeItem={removeItem}
+					cartItems={cartItems}
+				/>
 			</Layout>
 		</>
 	)

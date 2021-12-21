@@ -39,6 +39,7 @@ export default function Carousel(props) {
 						img="/img/flashhider.png"
 						id={1}
 						addCartItem={props.addCartItem}
+						inCart={props.cartItems.includes(1)}
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -48,6 +49,7 @@ export default function Carousel(props) {
 						img="/img/flashhider2.png"
 						id={2}
 						addCartItem={props.addCartItem}
+						inCart={props.cartItems.includes(2)}
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -57,6 +59,7 @@ export default function Carousel(props) {
 						img="/img/flashhider3.png"
 						id={3}
 						addCartItem={props.addCartItem}
+						inCart={props.cartItems.includes(3)}
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -65,6 +68,7 @@ export default function Carousel(props) {
 						text="4"
 						id={4}
 						addCartItem={props.addCartItem}
+						inCart={props.cartItems.includes(4)}
 					/>
 				</SwiperSlide>
 			</Swiper>
