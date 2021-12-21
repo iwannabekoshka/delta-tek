@@ -55,52 +55,57 @@ export default function Cart(props) {
 						</ul>
 					</div>
 					<div className="col-12 col-md-6">
-						<form onSubmit={submitForm}>
-							<h3>Order</h3>
-							<div className="mb-3">
-								<label htmlFor="email" className="form-label">Email address</label>
-								<input
-									type="email"
-									className="form-control"
-									id="email"
-									value={email}
-									onChange={changeEmail}
-								/>
-							</div>
-							<div className="mb-3">
-								<label htmlFor="index" className="form-label">Index</label>
-								<input
-									type="text"
-									className="form-control"
-									id="index"
-									value={index}
-									onChange={changeIndex}
-								/>
-							</div>
-							<div className="mb-3">
-								<label htmlFor="phone" className="form-label">Phone</label>
-								<input
-									type="phone"
-									className="form-control"
-									id="phone"
-									value={phone}
-									onChange={changePhone}
-								/>
-							</div>
-							<div className="mb-3">
-								<label htmlFor="address" className="form-label">Address</label>
-								<input
-									type="address"
-									className="form-control"
-									id="address"
-									value={address}
-									onChange={changeAddress}
-								/>
-							</div>
-							<div className="d-flex justify-content-end">
-								<button type="submit" className="btn btn-primary">Submit</button>
-							</div>
-						</form>
+						{cartItems &&
+							<>
+								<h3>Order</h3>
+
+								<form onSubmit={submitForm}>
+								<div className="mb-3">
+									<label htmlFor="email" className="form-label">Email address</label>
+									<input
+										type="email"
+										className="form-control"
+										id="email"
+										value={email}
+										onChange={changeEmail}
+									/>
+								</div>
+								<div className="mb-3">
+									<label htmlFor="index" className="form-label">Index</label>
+									<input
+										type="text"
+										className="form-control"
+										id="index"
+										value={index}
+										onChange={changeIndex}
+									/>
+								</div>
+								<div className="mb-3">
+									<label htmlFor="phone" className="form-label">Phone</label>
+									<input
+										type="phone"
+										className="form-control"
+										id="phone"
+										value={phone}
+										onChange={changePhone}
+									/>
+								</div>
+								<div className="mb-3">
+									<label htmlFor="address" className="form-label">Address</label>
+									<input
+										type="address"
+										className="form-control"
+										id="address"
+										value={address}
+										onChange={changeAddress}
+									/>
+								</div>
+								<div className="d-flex justify-content-end">
+									<button type="submit" className="btn btn-primary">Submit</button>
+								</div>
+							</form>
+							</>
+						}
 					</div>
 				</div>
 			</div>
