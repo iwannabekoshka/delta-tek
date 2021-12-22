@@ -1,20 +1,28 @@
-import Header from '../components/Header'
-import ProductsCarousel from '../components/ProductsCarousel'
-import Section from '../components/Section'
-import Video from '../components/Video'
+import Layout from "../components/layouts/Layout";
+import Section from "../components/layouts/Section";
+import Carousel from "../components/Carousel";
+import Contacts from "../components/Contacts";
+import Partners from "../components/Partners";
+import {useState} from "react";
 
-export default function Home() {
-  return (
-    <>
-      <Header />
-
-      <Section title="Our products">
-        <ProductsCarousel />
-      </Section>
-
-      <Section title="SFH-KP9">
-        <Video />
-      </Section>
-    </>
-  )
+export default function Home(props) {
+    return (
+        <>
+            <Section title="Our products">
+                <div className="container">
+                    <Carousel addCartItem={props.addCartItem} cartItems={props.cartItems}/>
+                </div>
+            </Section>
+            <Section title="Partners">
+                <div className="container">
+                    <Partners />
+                </div>
+            </Section>
+            <Section title="Contacts">
+                <div className="container">
+                    <Contacts/>
+                </div>
+            </Section>
+        </>
+    )
 }
