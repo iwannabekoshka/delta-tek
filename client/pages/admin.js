@@ -1,15 +1,24 @@
 import {Tab, Tabs} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import AdminLoginForm from "../components/AdminLoginForm";
 
 
 export default function Admin() {
     const [authorized, setAuthorized] = useState(false)
     const [addFormVisible, setAddFormVisible] = useState(false)
 
-    const submitFormLogin = (event) => {
-        event.preventDefault()
+    useEffect(() => {
+        let wasAuthorized = sessionStorage.getItem('adminAuthorized')
+        if (wasAuthorized === 'true') {
+            setAuthorized(true)
+        }
+    }, [])
+
+    const submitFormLogin = (formData) => {
+        console.log(formData)
 
         setAuthorized(true)
+        sessionStorage.setItem('adminAuthorized', 'true')
     }
 
     const toggleAddForm = () => {
@@ -19,17 +28,9 @@ export default function Admin() {
     return (<>
         <div className="container">
             {!authorized ?
-                <form onSubmit={submitFormLogin} className="w-50 mx-auto">
-                    <div className="mb-3">
-                        <label htmlFor="login" className="form-label">Логин</label>
-                        <input type="text" className="form-control" id="login"/>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">Пароль</label>
-                        <input type="password" className="form-control" id="password"/>
-                    </div>
-                    <button type="submit" className="btn btn-primary">Войти</button>
-                </form>
+                <AdminLoginForm
+                    submitFormLogin={submitFormLogin}
+                />
             :
                 <Tabs defaultActiveKey="goods" className="mb-3">
                     <Tab eventKey="goods" title="Товары">
@@ -52,6 +53,10 @@ export default function Admin() {
                                     className="form-control"
                                     id="description"
                                 />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="image" className="form-label">Изображение</label>
+                                <input className="form-control" type="file" id="image" />
                             </div>
                             <div className="d-flex justify-content-end">
                                 <button type="submit" className="btn btn-primary">Добавить</button>
