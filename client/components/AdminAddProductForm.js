@@ -2,7 +2,7 @@ import {useState} from "react";
 
 
 export default function AdminAddProductForm(props) {
-	const [formData, setFormData] = useState({title: '', description: '', image: null})
+	const [formData, setFormData] = useState({title: '', description: '', image: null, price: ''})
 
 	const changeFormData = (event) => {
 		const id = event.target.id
@@ -50,6 +50,16 @@ export default function AdminAddProductForm(props) {
 					type="file"
 					id="image"
 					accept="image/*"
+					onChange={changeFormData}
+				/>
+			</div>
+			<div className="mb-3">
+				<label htmlFor="text" className="form-label">Цена</label>
+				<input
+					type="text"
+					className="form-control"
+					id="price"
+					value={formData.price}
 					onChange={changeFormData}
 				/>
 			</div>
