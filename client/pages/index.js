@@ -13,14 +13,14 @@ export default function Home(props) {
                     <Carousel addCartItem={props.addCartItem} cartItems={props.cartItems}/>
                 </div>
             </Section>
-            <Section title="Contacts">
-                <div className="container">
-                    <Contacts/>
-                </div>
-            </Section>
             <Section title="Partners">
                 <div className="container">
                     <Partners />
+                </div>
+            </Section>
+            <Section title="Contacts">
+                <div className="container">
+                    <Contacts/>
                 </div>
             </Section>
         </>
