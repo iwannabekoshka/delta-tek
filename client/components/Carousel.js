@@ -9,7 +9,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
 export default function Carousel(props) {
-
+	console.log(props.products)
 	return (
 		<>
 			<Swiper
@@ -32,45 +32,19 @@ export default function Carousel(props) {
 					},
 				}}
 			>
-				<SwiperSlide>
-					<ProductCard
-						title="Title 1"
-						text="Some text for space 1"
-						img="/img/flashhider.png"
-						id={1}
-						addCartItem={props.addCartItem}
-						inCart={props.cartItems.includes(1)}
-					/>
-				</SwiperSlide>
-				<SwiperSlide>
-					<ProductCard
-						title="Title 2"
-						text="Some text for space 2 Some text for space 2 Some text for space 2 Some text for space 2 "
-						img="/img/flashhider2.png"
-						id={2}
-						addCartItem={props.addCartItem}
-						inCart={props.cartItems.includes(2)}
-					/>
-				</SwiperSlide>
-				<SwiperSlide>
-					<ProductCard
-						title="Title 3"
-						text=""
-						img="/img/flashhider3.png"
-						id={3}
-						addCartItem={props.addCartItem}
-						inCart={props.cartItems.includes(3)}
-					/>
-				</SwiperSlide>
-				<SwiperSlide>
-					<ProductCard
-						title="Title 4"
-						text="4"
-						id={4}
-						addCartItem={props.addCartItem}
-						inCart={props.cartItems.includes(4)}
-					/>
-				</SwiperSlide>
+				{props.products.map(product => {
+					return  <SwiperSlide>
+								<ProductCard
+									title={product.name}
+									text={product.description}
+									img="/img/flashhider.png"
+									price={product.price}
+									id={product._id}
+									addCartItem={props.addCartItem}
+									inCart={props.cartItems.includes(1)}
+								/>
+							</SwiperSlide>
+				})}
 			</Swiper>
 
 			<style jsx>{`

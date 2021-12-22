@@ -26,9 +26,32 @@ export default function Admin() {
         setAddFormVisible(prev => !prev)
     }
 
-    const submitAddForm = (formData) => {
-        console.log(formData)
+    const submitAddForm = async (formData) => {
+        const response1 = await fetch('http://localhost:3300/api/products/61c364c22d764f622c80a2bb', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            mode: 'no-cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        })
+        console.log('response1: ', response1)
+
+        const response = await fetch(`http://localhost:3300/api/products`, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            mode: 'no-cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            body: JSON.stringify({...formData, image: 'image'}) // body data type must match "Content-Type" header
+        });
+
+        console.log(response)
     }
+
 
     return (<>
         <div className="container">

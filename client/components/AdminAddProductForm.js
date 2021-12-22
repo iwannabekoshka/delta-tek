@@ -2,7 +2,7 @@ import {useState} from "react";
 
 
 export default function AdminAddProductForm(props) {
-	const [formData, setFormData] = useState({title: '', description: '', image: null, price: ''})
+	const [formData, setFormData] = useState({name: '', description: '', image: null, price: ''})
 
 	const changeFormData = (event) => {
 		const id = event.target.id
@@ -16,7 +16,12 @@ export default function AdminAddProductForm(props) {
 	const submitAddForm = (event) => {
 		event.preventDefault()
 
-		props.submitAddForm(formData)
+		const additionalMock = {
+
+			"admin_id": "61c364632d764f622c80a2b8"
+		}
+
+		props.submitAddForm({...formData, ...additionalMock})
 	}
 
 	return (<>
@@ -29,8 +34,8 @@ export default function AdminAddProductForm(props) {
 				<input
 					type="text"
 					className="form-control"
-					id="title"
-					value={formData.title}
+					id="name"
+					value={formData.name}
 					onChange={changeFormData}
 				/>
 			</div>
