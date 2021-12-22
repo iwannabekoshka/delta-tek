@@ -50,7 +50,7 @@ export default function Cart(props) {
 								? cartItems.map(item => {
 									return <CartItem item={item} key={item} removeItem={props.removeItem}/>
 								})
-								: <p>No items</p>
+								: <p className="m-0 p-2 text-center">No items</p>
 							}
 						</ul>
 					</div>
