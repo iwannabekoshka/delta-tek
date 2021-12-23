@@ -12,6 +12,7 @@ export default function ProductCard(props) {
 				<div className="card-body">
 					<h5 className="card-title">{props.title}</h5>
 					<p className="card-text">{props.text}</p>
+					<p className="card-price">{props.price}</p>
 					<div className="card-buttons">
 						<Link href={`/product/${props.id}`}>
 							<a className="btn btn-primary">Read more</a>

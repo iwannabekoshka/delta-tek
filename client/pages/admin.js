@@ -7,6 +7,7 @@ import AdminAddProductForm from "../components/AdminAddProductForm";
 export default function Admin() {
     const [authorized, setAuthorized] = useState(false)
     const [addFormVisible, setAddFormVisible] = useState(false)
+    const [products, setProducts] = useState([{title: '1'}, {title: '2'}, {title: '3'}])
 
     useEffect(() => {
         let wasAuthorized = sessionStorage.getItem('adminAuthorized')
@@ -28,6 +29,18 @@ export default function Admin() {
 
     const submitAddForm = (formData) => {
         console.log(formData)
+
+        setProducts(prev => {
+            return [...prev, {title: formData.title}]
+        })
+    }
+
+    const deleteItem = (event) => {
+        const title = event.target.getAttribute('data-id')
+
+        setProducts(prev => {
+            return [...prev].filter(item => item.title !== title)
+        })
     }
 
     return (<>
@@ -49,11 +62,14 @@ export default function Admin() {
                         />
 
                         <ul className="list-group shadow-sm rounded-2">
-                            <li className="list-group-item">1 Товар</li>
-                            <li className="list-group-item">2</li>
-                            <li className="list-group-item">3</li>
-                            <li className="list-group-item">4</li>
-                            <li className="list-group-item">5</li>
+                            {
+                                products.map(product => {
+                                    return <li className="list-group-item d-flex align-items-center justify-content-between">
+                                        {product.title}
+                                        <button className="btn btn-danger" onClick={deleteItem} data-id={product.title}>Удалить</button>
+                                    </li>
+                                })
+                            }
                         </ul>
                     </Tab>
                     <Tab eventKey="orders" title="Заказы">

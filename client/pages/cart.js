@@ -13,6 +13,11 @@ export default function Cart(props) {
 	let cartItems = window.sessionStorage.getItem('cartItems')
 	cartItems = cartItems.length ? cartItems.split(',') : null
 
+	let totalSum
+	if (cartItems) {
+		totalSum = cartItems.reduce((prev, cur) => parseInt(prev) + parseInt(cur)) + '00$'
+	}
+
 	const changePhone = (event) => {
 		setPhone(prev => {
 			return event.target.value
@@ -45,7 +50,7 @@ export default function Cart(props) {
 					<div className="col-12 col-md-6">
 						<h3>Items</h3>
 
-						<ul className="list-group list-group-flush border shadow-sm rounded-2">
+						<ul className="list-group list-group-flush border shadow-sm rounded-2 mb-2">
 							{cartItems
 								? cartItems.map(item => {
 									return <CartItem item={item} key={item} removeItem={props.removeItem}/>
@@ -53,6 +58,7 @@ export default function Cart(props) {
 								: <p className="m-0 p-2 text-center">No items</p>
 							}
 						</ul>
+						{cartItems && <p className="text-end border shadow-sm rounded-2 p-2">Total: {totalSum || ''}</p>}
 					</div>
 					<div className="col-12 col-md-6">
 						{cartItems &&

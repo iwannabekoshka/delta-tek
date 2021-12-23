@@ -40,6 +40,7 @@ export default function Carousel(props) {
 						id={1}
 						addCartItem={props.addCartItem}
 						inCart={props.cartItems.includes(1)}
+						price='100$'
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -50,6 +51,7 @@ export default function Carousel(props) {
 						id={2}
 						addCartItem={props.addCartItem}
 						inCart={props.cartItems.includes(2)}
+						price='200$'
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -60,6 +62,7 @@ export default function Carousel(props) {
 						id={3}
 						addCartItem={props.addCartItem}
 						inCart={props.cartItems.includes(3)}
+						price='300$'
 					/>
 				</SwiperSlide>
 				<SwiperSlide>
@@ -69,6 +72,7 @@ export default function Carousel(props) {
 						id={4}
 						addCartItem={props.addCartItem}
 						inCart={props.cartItems.includes(4)}
+						price='400$'
 					/>
 				</SwiperSlide>
 			</Swiper>
