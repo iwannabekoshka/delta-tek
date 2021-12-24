@@ -10,11 +10,10 @@ export default function Cart(props) {
 	const [phone, setPhone] = useState('')
 	const [address, setAddress] = useState('')
 
-	let cartItems = window.sessionStorage.getItem('cartItems')
-	cartItems = cartItems.length ? cartItems.split(',') : null
+	const cartItems = props.cartItems
 
 	let totalSum
-	if (cartItems) {
+	if (cartItems && cartItems.length) {
 		totalSum = cartItems.reduce((prev, cur) => parseInt(prev) + parseInt(cur)) + '00$'
 	}
 
