@@ -30,8 +30,6 @@ export default function Admin(props) {
     }
 
     const submitAddForm = (formData) => {
-        console.log(formData)
-
         setProducts(prev => {
             return [{
                 title: formData.title,
@@ -41,6 +39,50 @@ export default function Admin(props) {
                 id: Date.now(),
             }, ...prev]
         })
+
+        postData('http://localhost:3200/goods', {
+            title: formData.title,
+            price: formData.price,
+            currency: '$',
+            image: '/img/flashhider.png',
+            id: Date.now(),
+        })
+            .then(data => console.log(data))
+    }
+
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return await response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    async function deleteData(url = '') {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+        });
+        return await response.json(); // parses JSON response into native JavaScript objects
     }
 
     const deleteItem = (event) => {
@@ -49,6 +91,9 @@ export default function Admin(props) {
         setProducts(prev => {
             return [...prev].filter(item => item.id != id)
         })
+
+        deleteData(`http://localhost:3200/goods/${id}`)
+            .then(data => console.log(data))
     }
 
     return (<>
