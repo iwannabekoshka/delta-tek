@@ -1,18 +1,16 @@
 import Section from "../../components/layouts/Section";
-import {useRouter} from "next/router";
 
 
 export default function Product(props) {
-	const router = useRouter()
-	const {id} = router.query
+	const product = props.product[0]
 
 	return (<>
-		<Section title={`Product ${id}`}>
+		<Section title={`Product ${product.title}`}>
 			<div className="container">
 				<div className="row mb-4">
 					<div className="col-12 col-md-6">
 						<div className="item-img">
-							<img src="https://via.placeholder.com/600" className="img-fluid" alt="Good"/>
+							<img src={product.image} className="img-fluid" alt="Good"/>
 						</div>
 					</div>
 					<div className="col-12 col-md-6">
@@ -38,4 +36,15 @@ export default function Product(props) {
 			}
 		`}</style>
 	</>)
+}
+
+export async function getServerSideProps({ query }) {
+	const res = await fetch(`http://localhost:3200/goods?id=${query.id}`)
+	const product = await res.json()
+
+	return {
+		props: {
+			product: product
+		}
+	}
 }

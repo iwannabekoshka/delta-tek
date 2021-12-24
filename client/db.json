@@ -1,0 +1,36 @@
+{
+  "goods": [
+    {
+      "id": 1,
+      "title": "Title 1",
+      "description": "Some cool description",
+      "price": 100,
+      "currency": "$",
+      "image": "/img/flashhider.png"
+    },
+    {
+      "id": 2,
+      "title": "Title 2",
+      "description": "Some cool description with some more text just to fill more space and check card adaptivity",
+      "price": 200,
+      "currency": "$",
+      "image": "/img/flashhider2.png"
+    },
+    {
+      "id": 3,
+      "title": "Title 3",
+      "description": "Some cool",
+      "price": 300,
+      "currency": "$",
+      "image": "/img/flashhider3.png"
+    },
+    {
+      "id": 4,
+      "title": "Title 4",
+      "description": "Some",
+      "price": 300,
+      "currency": "$",
+      "image": "/img/flashhider3.png"
+    }
+  ]
+}

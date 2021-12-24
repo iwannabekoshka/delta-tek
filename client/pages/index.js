@@ -10,7 +10,7 @@ export default function Home(props) {
         <>
             <Section title="Our products">
                 <div className="container">
-                    <Carousel addCartItem={props.addCartItem} cartItems={props.cartItems}/>
+                    <Carousel addCartItem={props.addCartItem} cartItems={props.cartItems} products={props.products}/>
                 </div>
             </Section>
             <Section title="Partners">
@@ -25,4 +25,15 @@ export default function Home(props) {
             </Section>
         </>
     )
+}
+
+export async function getServerSideProps(context) {
+    const res = await fetch(`http://localhost:3200/goods`)
+    const products = await res.json()
+
+    return {
+        props: {
+            products: products
+        }
+    }
 }

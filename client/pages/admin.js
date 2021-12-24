@@ -4,16 +4,18 @@ import AdminLoginForm from "../components/AdminLoginForm";
 import AdminAddProductForm from "../components/AdminAddProductForm";
 
 
-export default function Admin() {
+export default function Admin(props) {
     const [authorized, setAuthorized] = useState(false)
     const [addFormVisible, setAddFormVisible] = useState(false)
-    const [products, setProducts] = useState([{title: '1'}, {title: '2'}, {title: '3'}])
+    const [products, setProducts] = useState([])
 
     useEffect(() => {
         let wasAuthorized = sessionStorage.getItem('adminAuthorized')
         if (wasAuthorized === 'true') {
             setAuthorized(true)
         }
+
+        setProducts(props.products)
     }, [])
 
     const submitFormLogin = (formData) => {
@@ -31,15 +33,21 @@ export default function Admin() {
         console.log(formData)
 
         setProducts(prev => {
-            return [...prev, {title: formData.title}]
+            return [{
+                title: formData.title,
+                price: formData.price,
+                currency: '$',
+                image: '/img/flashhider.png',
+                id: Date.now(),
+            }, ...prev]
         })
     }
 
     const deleteItem = (event) => {
-        const title = event.target.getAttribute('data-id')
+        const id = event.target.getAttribute('data-id')
 
         setProducts(prev => {
-            return [...prev].filter(item => item.title !== title)
+            return [...prev].filter(item => item.id != id)
         })
     }
 
@@ -61,13 +69,15 @@ export default function Admin() {
                             submitAddForm={submitAddForm}
                         />
 
-                        <ul className="list-group shadow-sm rounded-2">
+                        <ul className="list-group shadow-sm rounded-2 mb-4">
                             {
                                 products.map(product => {
-                                    return <li className="list-group-item d-flex align-items-center justify-content-between">
-                                        {product.title}
-                                        <button className="btn btn-danger" onClick={deleteItem} data-id={product.title}>Удалить</button>
-                                    </li>
+                                    return  <li className="list-group-item d-flex align-items-center justify-content-between" key={product.id}>
+                                                <img src={product.image} alt=""/>
+                                                {product.title}
+                                                <span>{product.price}{product.currency}</span>
+                                                <button className="btn btn-danger" onClick={deleteItem} data-id={product.id}>Удалить</button>
+                                            </li>
                                 })
                             }
                         </ul>
@@ -84,5 +94,22 @@ export default function Admin() {
                 </Tabs>
             }
         </div>
+
+        <style jsx>{`
+          .list-group-item img {
+            width: 100px;
+          }
+        `}</style>
     </>)
+}
+
+export async function getServerSideProps(context) {
+    const res = await fetch(`http://localhost:3200/goods`)
+    const products = await res.json()
+
+    return {
+        props: {
+            products: products
+        }
+    }
 }

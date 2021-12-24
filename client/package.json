@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mock-api": "json-server -w db.json -p 3200 -d 450"
   },
   "dependencies": {
     "bootstrap": "^5.1.3",
