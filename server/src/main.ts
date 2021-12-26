@@ -17,6 +17,12 @@ async function bootstrap(): Promise<void> {
     const port = configService.get('PORT') || DEFAULT_APP_PORT
     const hostname = configService.get('HOST') || DEFAULT_APP_HORT
 
+    app.enableCors({
+        origin: '*',
+        allowedHeaders: 'Content-Type, Access-Control-Allow-Headers, Authorization',
+        methods: ['GET', 'POST', 'PUT', 'DELETE']
+    })
+
     await app.listen(port, hostname, () =>
         logger.log(`Server running at ${hostname}:${port}`),
     )
