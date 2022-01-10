@@ -3,11 +3,14 @@ import {useRouter} from "next/router";
 
 
 export default function Product(props) {
-	const router = useRouter()
-	const {id} = router.query
+	const inCart = props.cartItems.filter(item => item._id === props.product._id).length>0
+
+	const addCartItem = () => {
+		props.addCartItem(props.product)
+	}
 
 	return (<>
-		<Section title={`Product ${id}`}>
+		<Section title={`Product ${props.product.name}, Price: ${props.product.price}$`}>
 			<div className="container">
 				<div className="row mb-4">
 					<div className="col-12 col-md-6">
@@ -16,17 +19,24 @@ export default function Product(props) {
 						</div>
 					</div>
 					<div className="col-12 col-md-6">
+						<div className="my-2 d-flex justify-content-end">
+							<button className={`btn btn-success ${inCart && 'disabled'}`} onClick={addCartItem}>
+								{inCart ? 'In Cart' : 'Add to Cart'}
+							</button>
+						</div>
 						<ul className="list-group list-group-flush border shadow-sm rounded-2">
-							<li className="list-group-item">An item</li>
-							<li className="list-group-item">A second item</li>
-							<li className="list-group-item">A third item</li>
-							<li className="list-group-item">A fourth item</li>
-							<li className="list-group-item">And a fifth one</li>
+							{props.product.specifications.map(specification => {
+								return  <li className="list-group-item" key={specification._id}>
+											<b>{specification.name}:</b> {specification.value}
+										</li>
+							})}
 						</ul>
 					</div>
 				</div>
 				<div className="row">
-					<p className="item-text border shadow-sm rounded-2 p-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, blanditiis cum dolore illo iste non recusandae sequi veritatis? Doloribus, iure?</p>
+					<p className="item-text border shadow-sm rounded-2 p-3">
+						{props.product.description}
+					</p>
 				</div>
 			</div>
 		</Section>
@@ -38,4 +48,21 @@ export default function Product(props) {
 			}
 		`}</style>
 	</>)
+}
+
+export async function getServerSideProps(context) {
+	const res = await fetch(`http://localhost:3300/api/products/${context.params.id}`)
+	const data = await res.json()
+
+	// if (!data) {
+	//     return {
+	//         notFound: true,
+	//     }
+	// }
+
+	return {
+		props: {
+			product: data
+		}, // will be passed to the page component as props
+	}
 }

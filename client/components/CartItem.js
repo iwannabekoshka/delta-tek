@@ -11,7 +11,7 @@ export default function CartItem(props) {
 			return count
 		})
 
-		props.changeItemCount(props.item.id, count)
+		props.changeItemCount(props.item._id, count)
 	}
 
 	const removeItem = () => {
@@ -21,7 +21,7 @@ export default function CartItem(props) {
 	return (<>
 		<li className="list-group-item ">
 			<div className="d-flex align-items-center justify-content-between mb-2">
-				<Link href={`/product/${props.item.id}`}>
+				<Link href={`/product/${props.item._id}`}>
 					<a>
 						<img src={props.item.img} />
 					</a>

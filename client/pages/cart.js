@@ -50,7 +50,7 @@ export default function Cart(props) {
 								? cartItems.map(item => {
 									return <CartItem
 										item={item}
-										key={item.id}
+										key={item._id}
 										removeItem={props.removeItem}
 										changeItemCount={props.changeItemCount}
 									/>

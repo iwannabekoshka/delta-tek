@@ -38,9 +38,9 @@ export default function Carousel(props) {
 									text={product.description}
 									img="/img/flashhider.png"
 									price={product.price}
-									id={product._id}
+									_id={product._id}
 									addCartItem={props.addCartItem}
-									inCart={props.cartItems.filter(item => item.id === product._id).length>0}
+									inCart={props.cartItems.filter(item => item._id === product._id).length>0}
 								/>
 							</SwiperSlide>
 				})}
