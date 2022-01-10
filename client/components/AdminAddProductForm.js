@@ -30,7 +30,7 @@ export default function AdminAddProductForm(props) {
 			onSubmit={submitAddForm}
 		>
 			<div className="mb-3">
-				<label htmlFor="text" className="form-label">Наименование</label>
+				<label htmlFor="name" className="form-label">Наименование</label>
 				<input
 					type="text"
 					className="form-control"

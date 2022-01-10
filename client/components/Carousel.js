@@ -9,7 +9,6 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
 export default function Carousel(props) {
-	console.log(props.products)
 	return (
 		<>
 			<Swiper
@@ -33,7 +32,7 @@ export default function Carousel(props) {
 				}}
 			>
 				{props.products.map(product => {
-					return  <SwiperSlide>
+					return  <SwiperSlide key={product._id}>
 								<ProductCard
 									title={product.name}
 									text={product.description}
@@ -41,7 +40,7 @@ export default function Carousel(props) {
 									price={product.price}
 									id={product._id}
 									addCartItem={props.addCartItem}
-									inCart={props.cartItems.includes(1)}
+									inCart={props.cartItems.filter(item => item.id === product._id).length>0}
 								/>
 							</SwiperSlide>
 				})}

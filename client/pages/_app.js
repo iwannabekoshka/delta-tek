@@ -5,16 +5,13 @@ import Layout from "../components/layouts/Layout";
 function MyApp({Component, pageProps}) {
 	useEffect(() => {
 		import("bootstrap/dist/js/bootstrap");
-
-		window.sessionStorage.setItem('cartItems', [].toString())
 	}, []);
 
 	const [cartItems, setCartItems] = useState([]);
 
-	const addCartItem = (id) => {
+	const addCartItem = (item) => {
 		setCartItems(prev => {
-			const cur = [...new Set([...prev, id])]
-			sessionStorage.setItem('cartItems', cur.toString())
+			const cur = [...new Set([...prev, item])]
 			return cur
 		})
 	}
@@ -22,7 +19,18 @@ function MyApp({Component, pageProps}) {
 	const removeItem = (id) => {
 		setCartItems(prev => {
 			const cur = [...prev].filter(itemId => itemId != id)
-			sessionStorage.setItem('cartItems', cur.toString())
+			return cur
+		})
+	}
+
+	const changeItemCount = (id, count) => {
+		setCartItems(prev => {
+			const cur = [...prev].map(prevItem => {
+				if (prevItem.id === id) {
+					return {...prevItem, count: count}
+				}
+				return prevItem
+			})
 			return cur
 		})
 	}
@@ -35,6 +43,7 @@ function MyApp({Component, pageProps}) {
 					addCartItem={addCartItem}
 					removeItem={removeItem}
 					cartItems={cartItems}
+					changeItemCount={changeItemCount}
 				/>
 			</Layout>
 		</>

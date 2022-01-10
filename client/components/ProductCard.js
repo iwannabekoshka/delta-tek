@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function ProductCard(props) {
 	const addCartItem = () => {
-		props.addCartItem(props.id)
+		props.addCartItem(props)
 	}
 
 	return (
