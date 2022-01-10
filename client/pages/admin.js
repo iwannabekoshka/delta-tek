@@ -7,7 +7,8 @@ import AdminAddProductForm from '../components/AdminAddProductForm'
 const BACK_HOST = process.env.BACK_HOST
 const BACK_PORT = process.env.BACK_PORT
 
-export default function Admin() {
+export default function Admin(props) {
+    console.log(props.products)
     const [authorized, setAuthorized] = useState(false)
     const [addFormVisible, setAddFormVisible] = useState(false)
 
@@ -19,8 +20,6 @@ export default function Admin() {
     }, [])
 
     const submitFormLogin = (formData) => {
-        console.log(formData)
-
         setAuthorized(true)
         sessionStorage.setItem('adminAuthorized', 'true')
     }
@@ -42,8 +41,6 @@ export default function Admin() {
                 }],
             }),
         })
-
-        console.log(response)
     }
 
 
@@ -66,11 +63,12 @@ export default function Admin() {
                         />
 
                         <ul className='list-group shadow-sm rounded-2'>
-                            <li className='list-group-item'>1 Товар</li>
-                            <li className='list-group-item'>2</li>
-                            <li className='list-group-item'>3</li>
-                            <li className='list-group-item'>4</li>
-                            <li className='list-group-item'>5</li>
+                            {props.products.map(product => {
+                                return  <li className='list-group-item' key={product._id}>
+                                            {product.name}
+                                        </li>
+                                }
+                            )}
                         </ul>
                     </Tab>
                     <Tab eventKey='orders' title='Заказы'>
@@ -86,4 +84,21 @@ export default function Admin() {
             }
         </div>
     </>)
+}
+
+export async function getServerSideProps(context) {
+    const res = await fetch(`http://localhost:3300/api/products`)
+    const data = await res.json()
+
+    // if (!data) {
+    //     return {
+    //         notFound: true,
+    //     }
+    // }
+
+    return {
+        props: {
+            products: data
+        }, // will be passed to the page component as props
+    }
 }

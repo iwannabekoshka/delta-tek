@@ -10,8 +10,8 @@ export default function Cart(props) {
 	const [phone, setPhone] = useState('')
 	const [address, setAddress] = useState('')
 
-	let cartItems = window.sessionStorage.getItem('cartItems')
-	cartItems = cartItems.length ? cartItems.split(',') : null
+	let cartItems = props.cartItems
+	console.log(cartItems)
 
 	const changePhone = (event) => {
 		setPhone(prev => {
@@ -46,9 +46,14 @@ export default function Cart(props) {
 						<h3>Items</h3>
 
 						<ul className="list-group list-group-flush border shadow-sm rounded-2">
-							{cartItems
+							{cartItems.length
 								? cartItems.map(item => {
-									return <CartItem item={item} key={item} removeItem={props.removeItem}/>
+									return <CartItem
+										item={item}
+										key={item._id}
+										removeItem={props.removeItem}
+										changeItemCount={props.changeItemCount}
+									/>
 								})
 								: <p className="m-0 p-2 text-center">No items</p>
 							}
