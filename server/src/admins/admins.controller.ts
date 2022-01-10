@@ -14,6 +14,11 @@ export class AdminsController {
         return this._adminsService.createAdmin(dto)
     }
 
+    @Get('/login')
+    login(@Body() dto: AdminDto) {
+        return this._adminsService.login(dto)
+    }
+
     @Get()
     getAdmins() {
         return this._adminsService.getAdmins()

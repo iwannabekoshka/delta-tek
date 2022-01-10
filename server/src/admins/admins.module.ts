@@ -4,6 +4,7 @@ import { AdminsController } from './admins.controller'
 import { AdminsService } from './admins.service'
 import { Admin, AdminSchema } from './schemas/admin.schema'
 import { RolesModule } from '../roles/roles.module'
+import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema'
 
 @Module({
     imports: [

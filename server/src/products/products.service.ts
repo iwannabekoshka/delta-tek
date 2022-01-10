@@ -71,7 +71,7 @@ export class ProductsService {
         }
     }
 
-    async updateProduct(id: ObjectId, input: ProductDto): Promise<Product> {
+    async updateProduct(id: ObjectId, input: ProductDto): Promise<any> {
         const { name, description, image, price, specifications, admin_id } = input
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
@@ -92,7 +92,7 @@ export class ProductsService {
             if (!product) {
                 new NotFoundException(`Couldn't find product`)
             }
-            return await product
+            return product
         } catch (error) {
             this._logger.error(error, 'updateProduct method error')
             throw new InternalServerErrorException(error)
