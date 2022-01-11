@@ -3,5 +3,5 @@
 export class AdminDto {
     name: string
     password: string
-    role_name: string
+    role_name?: string = 'admin'
 }
