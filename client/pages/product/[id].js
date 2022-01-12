@@ -10,7 +10,7 @@ export default function Product(props) {
 	}
 
 	return (<>
-		<Section title={`Product ${props.product.name}, Price: ${props.product.price}$`}>
+		<Section title={`${props.product.name}`}>
 			<div className="container">
 				<div className="row mb-4">
 					<div className="col-12 col-md-6">
@@ -19,7 +19,10 @@ export default function Product(props) {
 						</div>
 					</div>
 					<div className="col-12 col-md-6">
-						<div className="my-2 d-flex justify-content-end">
+						<div className="my-2 d-flex justify-content-between align-items-center">
+							<b className="me-2 fs-2">
+								Price: {props.product.price}$
+							</b>
 							<button className={`btn btn-success ${inCart && 'disabled'}`} onClick={addCartItem}>
 								{inCart ? 'In Cart' : 'Add to Cart'}
 							</button>

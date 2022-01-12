@@ -26,7 +26,7 @@ function MyApp({Component, pageProps}) {
 	const changeItemCount = (id, count) => {
 		setCartItems(prev => {
 			const cur = [...prev].map(prevItem => {
-				if (prevItem.id === id) {
+				if (prevItem._id === id) {
 					return {...prevItem, count: count}
 				}
 				return prevItem

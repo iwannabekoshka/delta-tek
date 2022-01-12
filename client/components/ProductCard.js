@@ -31,7 +31,7 @@ export default function ProductCard(props) {
 				}
 				.card-img {
 					height: 400px;
-					background-image: url(${props.img || '/img/flashhider.png'});
+					background-image: url(${props.image || '/img/flashhider.png'});
 					background-size: 100%;
 					background-position: center;
 					background-repeat: no-repeat;
