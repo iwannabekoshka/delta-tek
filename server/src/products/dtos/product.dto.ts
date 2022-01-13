@@ -8,7 +8,6 @@ class Specification {
 export class ProductDto {
     name: string
     description: string
-    image: string
     price: number
     specifications: Array<Specification>
     admin_id: ObjectId

@@ -6,6 +6,7 @@ import { AdminsService } from '../admins/admins.service'
 import { SpecificationsService } from '../specifications/specifications.service'
 import { ProductDto } from './dtos/product.dto'
 import { Product, ProductDocument } from './schemas/product.schema'
+import * as fs from 'fs'
 
 
 @Injectable()
@@ -19,8 +20,8 @@ export class ProductsService {
     ) {
     }
 
-    async createProduct(input: ProductDto): Promise<Product> {
-        const { name, description, image, price, specifications, admin_id } = input
+    async createProduct(input: ProductDto, image: string): Promise<Product> {
+        const { name, description, price, specifications, admin_id } = input
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
@@ -29,13 +30,12 @@ export class ProductsService {
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
-
             const product = new this._productModel({
                 name,
                 description,
                 image,
                 price,
-                specifications: specifications_arr,
+                specifications: [],
                 admin,
             })
             return await product.save()
@@ -71,8 +71,9 @@ export class ProductsService {
         }
     }
 
-    async updateProduct(id: ObjectId, input: ProductDto): Promise<any> {
-        const { name, description, image, price, specifications, admin_id } = input
+    async updateProduct(id: ObjectId, input: ProductDto, image: string | undefined ): Promise<any> {
+        const { name, description, price, specifications, admin_id } = input
+        let product: any
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
@@ -81,14 +82,25 @@ export class ProductsService {
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
-            const product = await this._productModel.updateOne({_id: id}, {
-                name,
-                description,
-                image,
-                price,
-                specifications: specifications_arr,
-                admin,
-            })
+            if (!image){
+                product = await this._productModel.updateOne({ _id: id }, {
+                    name,
+                    description,
+                    price,
+                    specifications: specifications_arr,
+                    admin,
+                })
+            }
+            else {
+                product = await this._productModel.updateOne({ _id: id }, {
+                    name,
+                    description,
+                    price,
+                    image,
+                    specifications: specifications_arr,
+                    admin,
+                })
+            }
             if (!product) {
                 new NotFoundException(`Couldn't find product`)
             }
