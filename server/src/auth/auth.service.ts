@@ -7,10 +7,9 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { randomBytes } from 'crypto'
-import { sign, SignOptions, verify, decode } from 'jsonwebtoken'
+import * as jsonwebtoken from 'jsonwebtoken'
 import * as moment from 'moment'
 import { v4 as Uuidv4 } from 'uuid'
-import * as fs from 'fs'
 
 import { AdminDto } from '../admins/dtos/admin.dto'
 import { Admin, AdminDocument } from '../admins/schemas/admin.schema'
@@ -21,22 +20,15 @@ import { RefreshToken, RefreshTokenDocument } from '../admins/schemas/refresh-to
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-const DEFAULT_ACCESS_TOKEN_TTL = 600
-
-/** Команды для генерирования ключей, ключи нужно закинуть в папку assets
- * ssh-keygen -t rsa -b 4096 -m PEM -f private.key
- * openssl rsa -in private.key -pubout -outform PEM -out public.key
- * **/
+const DEFAULT_ACCESS_TOKEN_TTL = 6000
 
 @Injectable()
 export class AuthService {
     private _logger = new Logger(AuthService.name)
 
-    private readonly _alg: string
     private readonly _expiresInSeconds: number
-    private readonly _jwtOptions: SignOptions
-    private readonly _jwtPrivateKey
-    private readonly _jwtPublicKey
+    private readonly _jwtOptions: jsonwebtoken.SignOptions
+    private readonly _secret: string
     private readonly _tokenType: string
     private readonly _refreshTokenTtl: number
 
@@ -48,22 +40,18 @@ export class AuthService {
         @InjectModel(RefreshToken.name) private _refreshTokenModel: Model<RefreshTokenDocument>,
         @InjectModel(Admin.name) private _adminModel: Model<AdminDocument>,
     ) {
-        this._alg = 'RS256'
         this._expiresInSeconds = +this._configService.get<number>(
             'ACCESS_TOKEN_TTL',
             DEFAULT_ACCESS_TOKEN_TTL,
         )
         this._jwtOptions = {
             expiresIn: this._expiresInSeconds,
-            algorithm: 'RS256',
             keyid: 'main',
         }
-        this._jwtPrivateKey = fs.readFileSync(
-            `${process.cwd()}/assets/private.key`,
-        )
-        this._jwtPublicKey = fs.readFileSync(
-            `${process.cwd()}/assets/public.key`,
-        )
+
+        this._secret = this._configService.get<string>(
+            'SECRET',
+            'secret')
 
         this._tokenType = this._configService.get<string>(
             'TOKEN_TYPE',
@@ -110,7 +98,7 @@ export class AuthService {
         options.expiresIn = expires
         options.jwtid = Uuidv4()
 
-        const signedPayload = sign(payload, this._jwtPrivateKey, options)
+        const signedPayload = jsonwebtoken.sign(payload, this._secret, options)
 
         return {
             accessToken: signedPayload,
@@ -163,9 +151,7 @@ export class AuthService {
 
     async verifyToken(token: string): Promise<{ isVerified: boolean }> {
         try {
-            verify(token, this._jwtPublicKey, {
-                algorithms: [this._alg],
-            })
+            jsonwebtoken.verify(token, this._secret)
             return {
                 isVerified: true,
             }
@@ -181,7 +167,7 @@ export class AuthService {
     async decodeToken(token: string): Promise<JwtPayload> {
         const response = await this.verifyToken(token)
         if (response.isVerified) {
-            const parsedToken: { sub: string; role: string } = await decode(
+            const parsedToken: { sub: string; role: string } = await jsonwebtoken.decode(
                 token,
             )
             console.dir(parsedToken, { depth: undefined })

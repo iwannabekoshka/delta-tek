@@ -2,7 +2,7 @@ import { Algorithm } from 'jsonwebtoken'
 
 export interface Jwks {
     kid: string
-    alg: Algorithm
+    // alg: Algorithm
     pem: string
 }
 
