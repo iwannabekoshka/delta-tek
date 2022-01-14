@@ -2,7 +2,9 @@ import {useState} from "react";
 
 
 export default function AdminAddProductForm(props) {
-	const [formData, setFormData] = useState({name: '', description: '', image: null, price: ''})
+	const [formData, setFormData] = useState({name: '', description: '', image: null, price: '', specifications: []})
+	const [specification, setSpecification] = useState('')
+	const [specificationValue, setSpecificationValue] = useState('')
 
 	const changeFormData = (event) => {
 		const id = event.target.id
@@ -21,12 +23,46 @@ export default function AdminAddProductForm(props) {
 			"admin_id": "61c364632d764f622c80a2b8"
 		}
 
+		console.log(formData)
+
 		props.submitAddForm({...formData, ...additionalMock})
+	}
+
+	const addSpecification = () => {
+		if (!specification.trim()) return
+
+		setFormData(prev => {
+			const obj = {}
+			obj.name = specification
+			obj.value = specificationValue
+
+			let spec = [obj, ...prev.specifications]
+
+			spec = spec.filter((value, index, self) =>
+					index === self.findIndex((t) => (
+						t.name === value.name
+					))
+			)
+
+			return {
+				...prev,
+				specifications: spec
+			}
+		})
+	}
+
+	const deleteSpecification = (spec) => {
+		setFormData(prev => {
+			return {
+				...prev,
+				specifications: [...prev.specifications].filter(s => s.name !== spec)
+			}
+		})
 	}
 
 	return (<>
 		<form
-			className={`border shadow-sm rounded-2 p-2 bg-white mb-2 ${!props.addFormVisible && 'collapse'}`}
+			className={`border shadow-sm rounded-2 p-2 bg-white mb-2`}
 			onSubmit={submitAddForm}
 		>
 			<div className="mb-3">
@@ -68,6 +104,56 @@ export default function AdminAddProductForm(props) {
 					onChange={changeFormData}
 				/>
 			</div>
+			<div className="mb-3 row">
+				<div className="col">
+					<label htmlFor="specification" className="form-label">Характеристика</label>
+					<input
+						className="form-control"
+						id="specification"
+						list="specifications-list"
+						value={specification}
+						onChange={(event) => setSpecification(event.target.value)}
+					/>
+					<datalist id="specifications-list">
+						<option value="Test 1" />
+						<option value="Test 2" />
+					</datalist>
+				</div>
+				<div className="col">
+					<label htmlFor="specificationValue" className="form-label">Значение</label>
+					<input
+						type="text"
+						className="form-control"
+						id="specificationValue"
+						value={specificationValue}
+						onChange={(event) => setSpecificationValue(event.target.value)}
+					/>
+				</div>
+				<div className="col d-flex align-items-end">
+					<button type="button" className="btn btn-primary" onClick={addSpecification}>Добавить характеристику</button>
+				</div>
+			</div>
+			<div className="mb-3">
+				<label className="form-label">Характеристики</label>
+				<ul className='list-group shadow-sm rounded-2'>
+					{formData.specifications.map(specification => {
+							return  (
+								<li className='list-group-item' key={specification.name}>
+									<div className="row">
+										<div className="col">
+											<b>{specification.name}</b>: {specification.value}
+										</div>
+										<div className="col d-flex justify-content-end">
+											<button type="button" className="btn btn-danger" onClick={() => deleteSpecification(specification.name)}>Удалить</button>
+										</div>
+									</div>
+								</li>
+							)
+						}
+					)}
+				</ul>
+			</div>
+
 			<div className="d-flex justify-content-end">
 				<button type="submit" className="btn btn-primary">Добавить</button>
 			</div>

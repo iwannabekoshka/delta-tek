@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react'
 import AdminLoginForm from '../components/AdminLoginForm'
 import AdminAddProductForm from '../components/AdminAddProductForm'
 
-const BACK_HOST = process.env.BACK_HOST
-const BACK_PORT = process.env.BACK_PORT
+// const BACK_HOST = process.env.BACK_HOST
+// const BACK_PORT = process.env.BACK_PORT
 
 export default function Admin(props) {
-    console.log(props.products)
+    const BACK_HOST = props.BACK_HOST
+    const BACK_PORT = props.BACK_PORT
+
     const [authorized, setAuthorized] = useState(false)
-    const [addFormVisible, setAddFormVisible] = useState(false)
+    const [products, setProducts] = useState(props.products)
 
     useEffect(() => {
         let wasAuthorized = sessionStorage.getItem('adminAuthorized')
@@ -19,13 +21,20 @@ export default function Admin(props) {
         }
     }, [])
 
-    const submitFormLogin = (formData) => {
+    const submitFormLogin = async (formData) => {
+        // const response = await fetch(`http://${BACK_HOST}:${BACK_PORT}/api/auth/login`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ formData }),
+        // })
+        //
+        // // sessionStorage.setItem('accessToken', response.accessToken)
+        // console.log(response)
+
         setAuthorized(true)
         sessionStorage.setItem('adminAuthorized', 'true')
-    }
-
-    const toggleAddForm = () => {
-        setAddFormVisible(prev => !prev)
     }
 
     const submitAddForm = async (formData) => {
@@ -41,11 +50,15 @@ export default function Admin(props) {
                 }],
             }),
         })
+
+        // setProducts(prev => {
+        //     return [...prev, formData]
+        // })
     }
 
 
     return (<>
-        <div className='container'>
+        <div className='container pb-3'>
             {!authorized ?
                 <AdminLoginForm
                     submitFormLogin={submitFormLogin}
@@ -53,17 +66,12 @@ export default function Admin(props) {
                 :
                 <Tabs defaultActiveKey='goods' className='mb-3'>
                     <Tab eventKey='goods' title='Товары'>
-                        <button className='btn btn-primary mb-2' onClick={toggleAddForm}>
-                            {!addFormVisible ? 'Добавить' : 'Скрыть форму добавления'}
-                        </button>
-
                         <AdminAddProductForm
-                            addFormVisible={addFormVisible}
                             submitAddForm={submitAddForm}
                         />
 
                         <ul className='list-group shadow-sm rounded-2'>
-                            {props.products.map(product => {
+                            {products.map(product => {
                                 return  <li className='list-group-item' key={product._id}>
                                             {product.name}
                                         </li>
@@ -73,11 +81,7 @@ export default function Admin(props) {
                     </Tab>
                     <Tab eventKey='orders' title='Заказы'>
                         <ul className='list-group shadow-sm rounded-2'>
-                            <li className='list-group-item'>1 заказ</li>
-                            <li className='list-group-item'>2</li>
-                            <li className='list-group-item'>3</li>
-                            <li className='list-group-item'>4</li>
-                            <li className='list-group-item'>5</li>
+
                         </ul>
                     </Tab>
                 </Tabs>
@@ -98,7 +102,9 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            products: data
+            products: data,
+            BACK_HOST: process.env.BACK_HOST,
+            BACK_PORT: process.env.BACK_PORT,
         }, // will be passed to the page component as props
     }
 }

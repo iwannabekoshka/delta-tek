@@ -2,7 +2,7 @@ import {useState} from "react";
 
 
 export default function AdminLoginForm(props) {
-	const [formData, setFormData] = useState({login: '', password: ''})
+	const [formData, setFormData] = useState({name: '', password: ''})
 
 	const submitFormLogin = (event) => {
 		event.preventDefault()
@@ -14,8 +14,11 @@ export default function AdminLoginForm(props) {
 		const value = event.target.value
 		const id = event.target.id
 
+		const obj = {}
+		obj[id] = value
+
 		setFormData((prev) => {
-			return {...prev, [id]: value}
+			return { ...prev, ...obj}
 		})
 	}
 
@@ -26,8 +29,8 @@ export default function AdminLoginForm(props) {
 				<input
 					type="text"
 					className="form-control"
-					id="login"
-					value={formData.login}
+					id="name"
+					value={formData.name}
 					onChange={changeFormData}
 				/>
 			</div>
