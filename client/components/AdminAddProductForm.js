@@ -65,6 +65,7 @@ export default function AdminAddProductForm(props) {
 			className={`border shadow-sm rounded-2 p-2 bg-white mb-2`}
 			onSubmit={submitAddForm}
 		>
+			<h3>Добавление товара</h3>
 			<div className="mb-3">
 				<label htmlFor="name" className="form-label">Наименование</label>
 				<input
