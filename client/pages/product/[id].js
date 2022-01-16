@@ -9,13 +9,15 @@ export default function Product(props) {
 		props.addCartItem(props.product)
 	}
 
+	console.log(props.product.image)
+
 	return (<>
 		<Section title={`${props.product.name}`}>
 			<div className="container">
 				<div className="row mb-4">
 					<div className="col-12 col-md-6">
 						<div className="item-img">
-							<img src="https://via.placeholder.com/600" className="img-fluid" alt="Good"/>
+							<img src={`/${props.product.image}`} className="img-fluid" alt="Good"/>
 						</div>
 					</div>
 					<div className="col-12 col-md-6">

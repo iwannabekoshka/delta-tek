@@ -17,6 +17,8 @@ import { ProductDto } from './dtos/product.dto'
 import { AuthGuard } from '../auth/guards/auth.guard'
 import { FileInterceptor } from '@nestjs/platform-express'
 
+const path = require('path')
+
 @Controller('/products')
 export class ProductsController {
     constructor(private _productsService: ProductsService) {
@@ -25,10 +27,10 @@ export class ProductsController {
     @Post()
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file', {
-        dest: '../client/images/products'
+        dest: path.resolve(__dirname, '../../../client/public/img')
     }))
     createProduct(@Body() dto: ProductDto, @UploadedFile() file: Express.Multer.File) {
-        const { path: imagePath } = file
+        const imagePath = 'img/' + file.filename
         return this._productsService.createProduct(dto, imagePath)
     }
 
@@ -45,7 +47,7 @@ export class ProductsController {
     @Put(':id')
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file', {
-        dest: '../client/images/products'
+        dest: '/client/public/img/'
     }))
     updateProduct(@Param('id') id: ObjectId, @Body() dto: ProductDto, @UploadedFile() file: Express.Multer.File) {
         let imagePath

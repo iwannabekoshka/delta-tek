@@ -9,6 +9,6 @@ export class ProductDto {
     name: string
     description: string
     price: number
-    specifications: Array<Specification>
+    specifications: string
     admin_id: ObjectId
 }

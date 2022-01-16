@@ -11,8 +11,6 @@ export default function Cart(props) {
 	const [address, setAddress] = useState('')
 
 	let cartItems = props.cartItems
-	console.log(cartItems)
-
 	const changePhone = (event) => {
 		setPhone(prev => {
 			return event.target.value

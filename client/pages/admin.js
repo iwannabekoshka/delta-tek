@@ -3,6 +3,7 @@ import {Tab, Tabs} from 'react-bootstrap'
 import {useEffect, useState} from 'react'
 import AdminLoginForm from '../components/AdminLoginForm'
 import AdminAddProductForm from '../components/AdminAddProductForm'
+import axios from 'axios';
 import Link from "next/link";
 
 // const BACK_HOST = process.env.BACK_HOST
@@ -15,46 +16,84 @@ export default function Admin(props) {
 	const [authorized, setAuthorized] = useState(false)
 	const [products, setProducts] = useState(props.products)
 
+	let accessToken, tokenType
+
 	useEffect(() => {
 		let wasAuthorized = sessionStorage.getItem('adminAuthorized')
 		if (wasAuthorized === 'true') {
 			setAuthorized(true)
 		}
+
+		accessToken = sessionStorage.getItem('accessToken')
+		tokenType = sessionStorage.getItem('tokenType')
 	}, [])
 
-	const submitFormLogin = async (formData) => {
-		// const response = await fetch(`http://${BACK_HOST}:${BACK_PORT}/api/auth/login`, {
-		//     method: 'POST',
-		//     headers: {
-		//         'Content-Type': 'application/json',
-		//     },
-		//     body: JSON.stringify({ formData }),
-		// })
-		//
-		// // sessionStorage.setItem('accessToken', response.accessToken)
-		// console.log(response)
+	const submitFormLogin = (formData) => {
+		fetch(`http://${BACK_HOST}:${BACK_PORT}/api/auth/login`, {
+		    method: 'POST',
+		    headers: {
+		        'Content-Type': 'application/json',
+		    },
+		    body: JSON.stringify(formData),
+		})
+			.then(res => res.json())
+			.then(res => {
+				const { accessToken, tokenType, statusCode } = res
 
-		setAuthorized(true)
-		sessionStorage.setItem('adminAuthorized', 'true')
+				if (statusCode == 500) return
+
+				props.setAuthParams(accessToken, tokenType)
+
+				setAuthorized(true)
+				sessionStorage.setItem('adminAuthorized', 'true')
+			})
 	}
 
-	const submitAddForm = async (formData) => {
-		const response = await fetch(`http://${BACK_HOST}:${BACK_PORT}/api/products`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				...formData, image: 'image', specifications: [{
-					name: 'test',
-					value: 'test1',
-				}],
-			}),
+	const submitAddForm = async (formData, data) => {
+		axios.post(
+			`http://${BACK_HOST}:${BACK_PORT}/api/products`,
+			formData,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+				}
+			}
+		).then(res => {
+			setProducts(prev => {
+				return [...prev, res.data]
+			})
 		})
+
+		// fetch(`http://${BACK_HOST}:${BACK_PORT}/api/products`, {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'multipart/form-data',
+		// 		'Authorization': `${props.authParams.tokenType} ${props.authParams.accessToken}`
+		// 	},
+		// 	body: formData,
+		// }).then(res => res.json())
+		// 	.then(res => {})
 
 		// setProducts(prev => {
 		//     return [...prev, formData]
 		// })
+	}
+
+	const deleteProduct = (_id) => {
+		axios.delete(
+			`http://${BACK_HOST}:${BACK_PORT}/api/products/${_id}`,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+				}
+			}
+		).then(res => {
+			setProducts(prev => {
+				return [...prev].filter(i => i._id !== _id)
+			})
+		})
 	}
 
 
@@ -69,14 +108,15 @@ export default function Admin(props) {
 					<Tab eventKey='goods' title='Товары'>
 						<AdminAddProductForm
 							submitAddForm={submitAddForm}
+							authParams={props.authParams}
 						/>
 
 						<h3>Товары</h3>
 						<div className='row'>
 							{products.map(product => {
 									return (
-										<div className="col-4 mb-2">
-											<div className="card" key={product._id}>
+										<div className="col-4 mb-2" key={product._id}>
+											<div className="card">
 												<div className="card-img"/>
 												<div className="card-body">
 													<h5 className="card-title">{product.name}</h5>
@@ -92,8 +132,8 @@ export default function Admin(props) {
 															)
 														})}
 													</ul>
-													<div className="d-flex justify-content-end">
-														<button type="button" className="btn btn-danger">Удалить</button>
+													<div className="d-flex justify-content-end h-100 align-items-end">
+														<button type="button" className="btn btn-danger" onClick={() => deleteProduct(product._id)}>Удалить</button>
 													</div>
 												</div>
 											</div>
@@ -103,10 +143,15 @@ export default function Admin(props) {
                                                 height: 100%;
                                                 box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
                                               }
+                                              
+                                              .card-body {
+                                                  display: flex;
+                                                  flex-direction: column;
+                                              }
 
                                               .card-img {
                                                 height: 400px;
-                                                background-image: url(${product.image || '/img/flashhider.png'});
+                                                background-image: url(${product.image || product.file || '/img/flashhider.png'});
                                                 background-size: 100%;
                                                 background-position: center;
                                                 background-repeat: no-repeat;
@@ -151,7 +196,7 @@ export async function getServerSideProps(context) {
 		props: {
 			products: data,
 			BACK_HOST: process.env.BACK_HOST,
-			BACK_PORT: process.env.BACK_PORT,
+			BACK_PORT: process.env.BACK_PORT
 		}, // will be passed to the page component as props
 	}
 }

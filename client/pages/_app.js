@@ -8,6 +8,12 @@ function MyApp({Component, pageProps}) {
 	}, []);
 
 	const [cartItems, setCartItems] = useState([]);
+	const [accessToken, setAccessToken] = useState({});
+	const [tokenType, setTokenType] = useState([]);
+
+	const authParams = {
+		accessToken, tokenType
+	}
 
 	const addCartItem = (item) => {
 		setCartItems(prev => {
@@ -35,6 +41,14 @@ function MyApp({Component, pageProps}) {
 		})
 	}
 
+	const setAuthParams = (accessToken, tokenType) => {
+		setAccessToken(prev => accessToken)
+		setTokenType(prev => tokenType)
+
+		sessionStorage.setItem('accessToken', accessToken)
+		sessionStorage.setItem('tokenType', tokenType)
+	}
+
 	return (
 		<>
 			<Layout cartItems={cartItems}>
@@ -44,6 +58,8 @@ function MyApp({Component, pageProps}) {
 					removeItem={removeItem}
 					cartItems={cartItems}
 					changeItemCount={changeItemCount}
+					setAuthParams={setAuthParams}
+					authParams={authParams}
 				/>
 			</Layout>
 		</>

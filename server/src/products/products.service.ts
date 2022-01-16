@@ -7,6 +7,9 @@ import { SpecificationsService } from '../specifications/specifications.service'
 import { ProductDto } from './dtos/product.dto'
 import { Product, ProductDocument } from './schemas/product.schema'
 import * as fs from 'fs'
+import {log} from "util";
+
+const path = require('path')
 
 
 @Injectable()
@@ -25,17 +28,20 @@ export class ProductsService {
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of specifications) {
+            for (const item of JSON.parse(specifications)) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
+                if(!specification){
+                    throw new NotFoundException('Specification not found')
+                }
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
             const product = new this._productModel({
                 name,
                 description,
-                image,
+                image: image.replace(__dirname, ''),
                 price,
-                specifications: [],
+                specifications: specifications_arr,
                 admin,
             })
             return await product.save()
@@ -77,7 +83,7 @@ export class ProductsService {
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of specifications) {
+            for (const item of JSON.parse(specifications)) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })

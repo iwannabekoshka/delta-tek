@@ -33,6 +33,7 @@ export class AdminsService {
     }
 
     async login(input: AdminDto): Promise<Admin> {
+        Logger.log(input)
         const { name, password } = input
 
         const admin = await this._adminModel.findOne({

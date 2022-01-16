@@ -1,14 +1,36 @@
-import {useState} from "react";
-
+import {useEffect, useState} from "react";
+import {loadGetInitialProps} from "next/dist/shared/lib/utils";
 
 export default function AdminAddProductForm(props) {
-	const [formData, setFormData] = useState({name: '', description: '', image: null, price: '', specifications: []})
+	const [formData, setFormData] = useState({name: '', description: '', file: null, price: '', specifications: []})
 	const [specification, setSpecification] = useState('')
 	const [specificationValue, setSpecificationValue] = useState('')
+	const [specifications, setSpecifications] = useState([])
+
+	let accessToken, tokenType
+
+	useEffect(() => {
+		accessToken = sessionStorage.getItem('accessToken')
+		tokenType = sessionStorage.getItem('tokenType')
+
+		fetch(`http://localhost:3300/api/specifications`, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `${tokenType} ${accessToken}`
+			},
+		}).then(res => res.json())
+			.then(res => {
+				setSpecifications(prev => {
+					return res
+				})
+			})
+
+
+	}, [])
 
 	const changeFormData = (event) => {
 		const id = event.target.id
-		const value = id === 'image' ? event.target.files[0] :event.target.value
+		const value = id === 'file' ? event.target.files[0] : event.target.value
 
 		setFormData((prev) => {
 			return {...prev, [id]: value}
@@ -19,16 +41,26 @@ export default function AdminAddProductForm(props) {
 		event.preventDefault()
 
 		const additionalMock = {
-
-			"admin_id": "61c364632d764f622c80a2b8"
+			"admin_id": "61df1efa1db126637c7be44b"
 		}
 
-		console.log(formData)
+		const data = new FormData()
+		data.append("admin_id", "61df1efa1db126637c7be44b")
 
-		props.submitAddForm({...formData, ...additionalMock})
+		let obj = {...formData, image: formData.file}
+
+		for (const key in formData) {
+			if (key === 'specifications') {
+				obj[key] = JSON.stringify(obj[key])
+			}
+
+			data.append(key, obj[key])
+		}
+
+		props.submitAddForm(data, formData)
 	}
 
-	const addSpecification = () => {
+	const addSpecification = async () => {
 		if (!specification.trim()) return
 
 		setFormData(prev => {
@@ -49,6 +81,29 @@ export default function AdminAddProductForm(props) {
 				specifications: spec
 			}
 		})
+
+		if (specifications.length && specifications.find(spec => spec.name === specification)) return
+
+		console.log(tokenType, accessToken)
+
+		fetch(`http://localhost:3300/api/specifications`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+			},
+			body: JSON.stringify({
+				name: specification
+			}),
+		})
+			.then(res => res.json())
+			.then(res => {
+				return {
+
+				}
+			})
+
+
 	}
 
 	const deleteSpecification = (spec) => {
@@ -86,11 +141,11 @@ export default function AdminAddProductForm(props) {
 				/>
 			</div>
 			<div className="mb-3">
-				<label htmlFor="image" className="form-label">Изображение</label>
+				<label htmlFor="file" className="form-label">Изображение</label>
 				<input
 					className="form-control"
 					type="file"
-					id="image"
+					id="file"
 					accept="image/*"
 					onChange={changeFormData}
 				/>
@@ -98,7 +153,7 @@ export default function AdminAddProductForm(props) {
 			<div className="mb-3">
 				<label htmlFor="text" className="form-label">Цена</label>
 				<input
-					type="text"
+					type="number"
 					className="form-control"
 					id="price"
 					value={formData.price}
@@ -114,10 +169,14 @@ export default function AdminAddProductForm(props) {
 						list="specifications-list"
 						value={specification}
 						onChange={(event) => setSpecification(event.target.value)}
+						autoComplete="off"
 					/>
 					<datalist id="specifications-list">
-						<option value="Test 1" />
-						<option value="Test 2" />
+						{specifications.length && specifications.map(spec => {
+							return (<>
+								<option value={spec.name} key={spec._id}/>
+							</>)
+						})}
 					</datalist>
 				</div>
 				<div className="col">
@@ -160,4 +219,19 @@ export default function AdminAddProductForm(props) {
 			</div>
 		</form>
 	</>)
+}
+
+export async function getServerSideProps(context) {
+	// if (!data) {
+	//     return {
+	//         notFound: true,
+	//     }
+	// }
+
+	return {
+		props: {
+			BACK_HOST: process.env.BACK_HOST,
+			BACK_PORT: process.env.BACK_PORT,
+		}, // will be passed to the page component as props
+	}
 }

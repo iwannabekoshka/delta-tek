@@ -36,7 +36,7 @@ export default function Carousel(props) {
 								<ProductCard
 									title={product.name}
 									text={product.description}
-									img="/img/flashhider.png"
+									image={product.image}
 									price={product.price}
 									_id={product._id}
 									addCartItem={props.addCartItem}
