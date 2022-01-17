@@ -6,11 +6,6 @@ import { AdminsService } from '../admins/admins.service'
 import { SpecificationsService } from '../specifications/specifications.service'
 import { ProductDto } from './dtos/product.dto'
 import { Product, ProductDocument } from './schemas/product.schema'
-import * as fs from 'fs'
-import {log} from "util";
-
-const path = require('path')
-
 
 @Injectable()
 export class ProductsService {
@@ -23,7 +18,7 @@ export class ProductsService {
     ) {
     }
 
-    async createProduct(input: ProductDto, image: string): Promise<Product> {
+    async createProduct(input: ProductDto, images: Array<string>): Promise<Product> {
         const { name, description, price, specifications, admin_id } = input
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
@@ -39,7 +34,7 @@ export class ProductsService {
             const product = new this._productModel({
                 name,
                 description,
-                image: image.replace(__dirname, ''),
+                images,
                 price,
                 specifications: specifications_arr,
                 admin,
@@ -77,7 +72,7 @@ export class ProductsService {
         }
     }
 
-    async updateProduct(id: ObjectId, input: ProductDto, image: string | undefined ): Promise<any> {
+    async updateProduct(id: ObjectId, input: ProductDto, images: Array<string> | undefined ): Promise<any> {
         const { name, description, price, specifications, admin_id } = input
         let product: any
         try {
@@ -88,11 +83,12 @@ export class ProductsService {
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
-            if (!image){
+            if (images.length > 0){
                 product = await this._productModel.updateOne({ _id: id }, {
                     name,
                     description,
                     price,
+                    images,
                     specifications: specifications_arr,
                     admin,
                 })
@@ -102,7 +98,6 @@ export class ProductsService {
                     name,
                     description,
                     price,
-                    image,
                     specifications: specifications_arr,
                     admin,
                 })
