@@ -2,13 +2,9 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
 
 import { Admin } from '../../admins/schemas/admin.schema'
-import { Specification } from '../../specifications/schemas/specification.schema'
 
 @Schema()
 export class ProductSpecification {
-
-    // @Prop({ type: Types.ObjectId, required: true, ref: 'Specification' })
-    // specification: Specification
 
     @Prop({ type: Types.ObjectId, required: true })
     _id: string
@@ -18,6 +14,16 @@ export class ProductSpecification {
 
     @Prop({ type: String, required: true })
     value: string
+}
+
+@Schema()
+export class Thread {
+
+    @Prop({ type: Number, required: true })
+    value: number
+
+    @Prop({ type: Number, required: true })
+    price: number
 }
 
 export type ProductDocument = Product & Document
@@ -43,6 +49,9 @@ export class Product {
 
     @Prop({ type: ProductSpecification } )
     specifications: Array<ProductSpecification>
+
+    @Prop({ type: Thread } )
+    thread: Array<Thread>
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Admin' })
     admin: Admin
