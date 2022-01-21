@@ -35,8 +35,8 @@ export class Product {
     @Prop({ type: String, required: true })
     description: string
 
-    @Prop({ type: String, required: true })
-    image: string
+    @Prop({ type: [String], required: true })
+    images: Array<string>
 
     @Prop({ type: Number, required: true })
     price: number
