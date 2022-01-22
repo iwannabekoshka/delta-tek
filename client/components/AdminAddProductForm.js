@@ -173,9 +173,7 @@ export default function AdminAddProductForm(props) {
 					/>
 					<datalist id="specifications-list">
 						{specifications.length && specifications.map(spec => {
-							return (<>
-								<option value={spec.name} key={spec._id}/>
-							</>)
+							return <option value={spec.name} key={spec._id}/>
 						})}
 					</datalist>
 				</div>

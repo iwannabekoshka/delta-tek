@@ -15,6 +15,23 @@ export default function Admin(props) {
 
 	const [authorized, setAuthorized] = useState(false)
 	const [products, setProducts] = useState(props.products)
+	const [orderFormFields, setOrderFormFields] = useState([
+		//TODO заменить на данные с сервера
+		{
+			id: "formField1",
+			formFieldType: 'email',
+			formFieldLabel: 'Email'
+		},
+		{
+			id: "formField2",
+			formFieldType: 'text',
+			formFieldLabel: 'Name'
+		}
+	])
+	const [addOrderFormItem, setAddOrderFormItem] = useState({
+		formFieldType: '',
+		formFieldLabel: ''
+	})
 
 	let accessToken, tokenType
 
@@ -96,6 +113,57 @@ export default function Admin(props) {
 		})
 	}
 
+	const submitAddOrderFormField = (event) => {
+		event.preventDefault()
+
+		setOrderFormFields(prev => {
+			return [
+				//TODO заменить генерацию id
+				{...addOrderFormItem, id: Math.random()},
+				...prev
+			]
+		})
+	}
+
+	const changeAddOrderFormField = event=> {
+		const id = event.target.id
+		const value = event.target.value
+
+		setAddOrderFormItem(prev => {
+			return {
+				...prev,
+				[id]: value
+			}
+		})
+	}
+
+	const removeOrderFormField = (id) => {
+		setOrderFormFields(prev => {
+			return [...prev].filter(formField => formField.id !== id)
+		})
+	}
+
+	const changeOrderFormField = (event, id) => {
+		const type = event.target.id.substring(0, event.target.id.length - 1); //тк добавил в конец 2
+		const value = event.target.value
+
+		setOrderFormFields(prev => {
+			return [...prev].map(formField => {
+				if (formField.id === id) {
+					return {
+						...formField,
+						[type]: value
+					}
+				}
+				return formField
+			})
+		})
+	}
+
+	const submitOrderFormFields = () => {
+		console.log(orderFormFields)
+	}
+
 
 	return (<>
 		<div className='container pb-3'>
@@ -175,6 +243,77 @@ export default function Admin(props) {
 						<ul className='list-group shadow-sm rounded-2'>
 
 						</ul>
+					</Tab>
+					<Tab eventKey='order-form' title='Форма заказа'>
+						<form onSubmit={submitAddOrderFormField} className='border shadow-sm rounded-2 p-2 bg-white mb-2'>
+							<h3>Добавление</h3>
+							<div className="row mb-2">
+								<div className="col">
+									<label htmlFor="formFieldType" className="form-label">Тип поля</label>
+									<select
+										className="form-select"
+										id="formFieldType"
+										onChange={changeAddOrderFormField}
+									>
+										<option value="email">E-mail</option>
+										<option value="text">Текст</option>
+										<option value="address">Адрес</option>
+										<option value="tel">Телефон</option>
+									</select>
+								</div>
+								<div className="col">
+									<label htmlFor="formFieldLabel" className="form-label">Название поля</label>
+									<input
+										id="formFieldLabel"
+										type="text"
+										className="form-control"
+										onChange={changeAddOrderFormField}
+									/>
+								</div>
+								<div className="col d-flex align-items-end justify-content-end">
+									<button type="submit" className="btn btn-primary">Добавить</button>
+								</div>
+							</div>
+						</form>
+						<section className='border shadow-sm rounded-2 p-2 bg-white mb-2'>
+							<h3>Поля формы заказа</h3>
+							{orderFormFields.map(orderFormField => {
+								return (
+									<div className="row mb-2" key={orderFormField.id}>
+										<div className="col">
+											<label htmlFor="formFieldType2" className="form-label">Тип поля</label>
+											<select
+												id="formFieldType2"
+												className="form-select"
+												value={orderFormField.formFieldType}
+												onChange={(event) => changeOrderFormField(event, orderFormField.id)}
+											>
+												<option value="email">E-mail</option>
+												<option value="text">Текст</option>
+												<option value="address">Адрес</option>
+												<option value="tel">Телефон</option>
+											</select>
+										</div>
+										<div className="col">
+											<label htmlFor="formFieldLabel2" className="form-label">Название поля</label>
+											<input
+												id="formFieldLabel2"
+												type="text"
+												className="form-control"
+												value={orderFormField.formFieldLabel}
+												onChange={(event) => changeOrderFormField(event, orderFormField.id)}
+											/>
+										</div>
+										<div className="col d-flex justify-content-end align-items-end">
+											<button className="btn btn-danger" onClick={() => removeOrderFormField(orderFormField.id)}>Удалить</button>
+										</div>
+									</div>
+								)
+							})}
+							<div className="d-flex justify-content-end mt-5">
+								<button onClick={submitOrderFormFields} className="btn btn-primary">Сохранить</button>
+							</div>
+						</section>
 					</Tab>
 				</Tabs>
 			}
