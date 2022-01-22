@@ -10,6 +10,7 @@ import { RolesModule } from './roles/roles.module'
 import { AdminsModule } from './admins/admins.module'
 import { ProductsModule } from './products/products.module'
 import { AuthModule } from './auth/auth.module'
+import { OrderFormModule } from './order-form/order-form.module'
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { AuthModule } from './auth/auth.module'
         RolesModule,
         AdminsModule,
         ProductsModule,
-        AuthModule
+        AuthModule,
+        OrderFormModule
     ],
 })
 export class AppModule {

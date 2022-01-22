@@ -23,7 +23,7 @@ export class ProductsService {
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of JSON.parse(specifications)) {
+            for (const item of specifications) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 if(!specification){
@@ -78,7 +78,7 @@ export class ProductsService {
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of JSON.parse(specifications)) {
+            for (const item of specifications) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
