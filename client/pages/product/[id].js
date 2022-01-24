@@ -9,8 +9,6 @@ export default function Product(props) {
 		props.addCartItem(props.product)
 	}
 
-	console.log(props.product.image)
-
 	return (<>
 		<Section title={`${props.product.name}`}>
 			<div className="container">

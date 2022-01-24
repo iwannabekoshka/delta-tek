@@ -2,7 +2,10 @@ import {useEffect, useState} from "react";
 import {loadGetInitialProps} from "next/dist/shared/lib/utils";
 
 export default function AdminAddProductForm(props) {
-	const [formData, setFormData] = useState({name: '', description: '', file: null, price: '', specifications: []})
+	const [formData, setFormData] = useState({name: '', description: '', files: null, price: '', specifications: []})
+	const [threadValue, setThreadValue] = useState('')
+	const [threadPrice, setThreadPrice] = useState('')
+	const [threads, setThreads] = useState([])
 	const [specification, setSpecification] = useState('')
 	const [specificationValue, setSpecificationValue] = useState('')
 	const [specifications, setSpecifications] = useState([])
@@ -30,7 +33,7 @@ export default function AdminAddProductForm(props) {
 
 	const changeFormData = (event) => {
 		const id = event.target.id
-		const value = id === 'file' ? event.target.files[0] : event.target.value
+		const value = id === 'files' ? [...event.target.files] : event.target.value
 
 		setFormData((prev) => {
 			return {...prev, [id]: value}
@@ -46,8 +49,12 @@ export default function AdminAddProductForm(props) {
 
 		const data = new FormData()
 		data.append("admin_id", "61df1efa1db126637c7be44b")
+		data.append("thread", JSON.stringify(threads))
 
-		let obj = {...formData, image: formData.file}
+		let obj = {
+			...formData,
+			files: formData.files
+		}
 
 		for (const key in formData) {
 			if (key === 'specifications') {
@@ -84,8 +91,6 @@ export default function AdminAddProductForm(props) {
 
 		if (specifications.length && specifications.find(spec => spec.name === specification)) return
 
-		console.log(tokenType, accessToken)
-
 		fetch(`http://localhost:3300/api/specifications`, {
 			method: 'POST',
 			headers: {
@@ -112,6 +117,32 @@ export default function AdminAddProductForm(props) {
 				...prev,
 				specifications: [...prev.specifications].filter(s => s.name !== spec)
 			}
+		})
+	}
+
+	const addThread = async () => {
+		if (!threadValue.trim()) return
+
+		setThreads(prev => {
+			const obj = {
+				value: threadValue,
+				price: threadPrice
+			}
+			let threadsLoc = [obj, ...prev]
+
+			threadsLoc = threadsLoc.filter((value1, index, self) =>
+					index === self.findIndex((t) => (
+						t.value === value1.value
+					))
+			)
+
+			return threadsLoc
+		})
+	}
+
+	const deleteThread = (value) => {
+		setThreads(prev => {
+			return [...prev].filter(thread => thread.value !== value)
 		})
 	}
 
@@ -145,9 +176,10 @@ export default function AdminAddProductForm(props) {
 				<input
 					className="form-control"
 					type="file"
-					id="file"
+					id="files"
 					accept="image/*"
 					onChange={changeFormData}
+					multiple
 				/>
 			</div>
 			<div className="mb-3">
@@ -160,6 +192,7 @@ export default function AdminAddProductForm(props) {
 					onChange={changeFormData}
 				/>
 			</div>
+			{/*Характеристики*/}
 			<div className="mb-3 row">
 				<div className="col">
 					<label htmlFor="specification" className="form-label">Характеристика</label>
@@ -203,6 +236,53 @@ export default function AdminAddProductForm(props) {
 										</div>
 										<div className="col d-flex justify-content-end">
 											<button type="button" className="btn btn-danger" onClick={() => deleteSpecification(specification.name)}>Удалить</button>
+										</div>
+									</div>
+								</li>
+							)
+						}
+					)}
+				</ul>
+			</div>
+
+			{/*Резьба*/}
+			<div className="mb-3 row">
+				<div className="col">
+					<label htmlFor="threadValue" className="form-label">Резьба</label>
+					<input
+						type="text"
+						className="form-control"
+						id="threadValue"
+						value={threadValue}
+						onChange={(event) => setThreadValue(event.target.value)}
+					/>
+				</div>
+				<div className="col">
+					<label htmlFor="threadPrice" className="form-label">Цена</label>
+					<input
+						type="number"
+						className="form-control"
+						id="threadPrice"
+						value={threadPrice}
+						onChange={(event) => setThreadPrice(event.target.value)}
+					/>
+				</div>
+				<div className="col d-flex align-items-end">
+					<button type="button" className="btn btn-primary" onClick={addThread}>Добавить резьбу</button>
+				</div>
+			</div>
+			<div className="mb-3">
+				<label className="form-label">Резьбы</label>
+				<ul className='list-group shadow-sm rounded-2'>
+					{threads.map(thread => {
+							return  (
+								<li className='list-group-item' key={thread.value}>
+									<div className="row">
+										<div className="col">
+											<b>{thread.value}</b>: {thread.price}$
+										</div>
+										<div className="col d-flex justify-content-end">
+											<button type="button" className="btn btn-danger" onClick={() => deleteThread(thread.value)}>Удалить</button>
 										</div>
 									</div>
 								</li>

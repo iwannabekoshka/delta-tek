@@ -1,8 +1,8 @@
 import {env} from 'process'
 import {Tab, Tabs} from 'react-bootstrap'
 import {useEffect, useState} from 'react'
-import AdminLoginForm from '../components/AdminLoginForm'
-import AdminAddProductForm from '../components/AdminAddProductForm'
+import AdminLoginForm from '../../components/AdminLoginForm'
+import AdminAddProductForm from '../../components/AdminAddProductForm'
 import axios from 'axios';
 import Link from "next/link";
 
@@ -200,7 +200,10 @@ export default function Admin(props) {
 															)
 														})}
 													</ul>
-													<div className="d-flex justify-content-end h-100 align-items-end">
+													<div className="d-flex justify-content-between h-100 align-items-end">
+														<Link href={`admin/product/${product._id}`}>
+															<a className="btn btn-success">Редактировать</a>
+														</Link>
 														<button type="button" className="btn btn-danger" onClick={() => deleteProduct(product._id)}>Удалить</button>
 													</div>
 												</div>
