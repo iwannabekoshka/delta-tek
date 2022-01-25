@@ -1,5 +1,6 @@
 import Section from "../../../components/layouts/Section";
 import {useEffect, useState} from "react";
+import axios from 'axios'
 
 
 export default function ProductEdit(props) {
@@ -28,12 +29,37 @@ export default function ProductEdit(props) {
 
 	}, [])
 
-	console.log(specifications)
-
 	const submitEditForm = (event) => {
 		event.preventDefault()
 
-		console.log(product)
+		const data = new FormData()
+		data.append("admin_id", "61df1efa1db126637c7be44b")
+
+		let obj = {
+			...product,
+			//TODO multifiles
+			files: []
+		}
+
+		for (const key in product) {
+			if (key === 'specifications') {
+				obj[key] = JSON.stringify(obj[key])
+			}
+
+			data.append(key, obj[key])
+		}
+
+		axios.put(
+			`http://localhost:3300/api/products/${props.product._id}`,
+			data,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+				}
+			}
+			)
+			.then(res => console.log(res))
 	}
 
 	const changeProductData = event => {
