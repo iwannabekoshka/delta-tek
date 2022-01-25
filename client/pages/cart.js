@@ -2,6 +2,7 @@ import Layout from "../components/layouts/Layout";
 import Section from "../components/layouts/Section";
 import {useEffect, useState} from "react";
 import CartItem from "../components/CartItem";
+import {useRouter} from "next/router";
 
 
 export default function Cart(props) {
@@ -9,6 +10,8 @@ export default function Cart(props) {
 	const [index, setIndex] = useState('')
 	const [phone, setPhone] = useState('')
 	const [address, setAddress] = useState('')
+
+	const router = useRouter()
 
 	let cartItems = props.cartItems
 	const changePhone = (event) => {
@@ -34,6 +37,8 @@ export default function Cart(props) {
 
 	const submitForm = (event) => {
 		event.preventDefault();
+
+		router.push('/purchase')
 	}
 
 	return (
