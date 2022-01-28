@@ -6,39 +6,49 @@ import {useRouter} from "next/router";
 
 
 export default function Cart(props) {
-	const [email, setEmail] = useState('')
-	const [index, setIndex] = useState('')
-	const [phone, setPhone] = useState('')
-	const [address, setAddress] = useState('')
+	const [orderFormFields, setOrderFormFields] = useState(
+		props.orderFormFields
+			.sort((a,b) => {
+				if ( a.number < b.number ){
+					return -1;
+				}
+				if ( a.number > b.number ){
+					return 1;
+				}
+				return 0;
+			})
+			.map(orderFormField => {
+				return {...orderFormField, value: ''}
+			})
+	)
 
 	const router = useRouter()
 
 	let cartItems = props.cartItems
-	const changePhone = (event) => {
-		setPhone(prev => {
-			return event.target.value
-		})
-	}
-	const changeEmail = (event) => {
-		setEmail(prev => {
-			return event.target.value
-		})
-	}
-	const changeIndex = (event) => {
-		setIndex(prev => {
-			return event.target.value
-		})
-	}
-	const changeAddress = (event) => {
-		setAddress(prev => {
-			return event.target.value
-		})
-	}
 
 	const submitForm = (event) => {
 		event.preventDefault();
 
-		router.push('/purchase')
+		console.log(orderFormFields)
+
+		// router.push('/purchase')
+	}
+
+	const changeOrderFormField = event => {
+		const _id = event.target.id
+		const value = event.target.value
+
+		setOrderFormFields(prev => {
+			return [...prev].map(orderFormField => {
+				if (orderFormField._id === _id) {
+					return {
+						...orderFormField,
+						value
+					}
+				}
+				return orderFormField
+			})
+		})
 	}
 
 	return (
@@ -68,46 +78,21 @@ export default function Cart(props) {
 								<h3>Order</h3>
 
 								<form onSubmit={submitForm} className="border shadow-sm rounded-2 p-2 bg-white">
-									<div className="mb-3">
-										<label htmlFor="email" className="form-label">Email address</label>
-										<input
-											type="email"
-											className="form-control"
-											id="email"
-											value={email}
-											onChange={changeEmail}
-										/>
-									</div>
-									<div className="mb-3">
-										<label htmlFor="index" className="form-label">Index</label>
-										<input
-											type="text"
-											className="form-control"
-											id="index"
-											value={index}
-											onChange={changeIndex}
-										/>
-									</div>
-									<div className="mb-3">
-										<label htmlFor="phone" className="form-label">Phone</label>
-										<input
-											type="phone"
-											className="form-control"
-											id="phone"
-											value={phone}
-											onChange={changePhone}
-										/>
-									</div>
-									<div className="mb-3">
-										<label htmlFor="address" className="form-label">Address</label>
-										<input
-											type="address"
-											className="form-control"
-											id="address"
-											value={address}
-											onChange={changeAddress}
-										/>
-									</div>
+									{orderFormFields.map(orderFormField => {
+										return (
+											<div className="mb-3">
+												<label htmlFor={orderFormField._id} className="form-label">{orderFormField.name}</label>
+												<input
+													type="text"
+													className="form-control"
+													id={orderFormField._id}
+													value={orderFormField.value}
+													onChange={changeOrderFormField}
+												/>
+											</div>
+										)
+									})}
+
 									<div className="d-flex justify-content-end">
 										<button type="submit" className="btn btn-primary">Submit</button>
 									</div>
@@ -119,4 +104,23 @@ export default function Cart(props) {
 			</div>
 		</Section>
 	)
+}
+
+export async function getServerSideProps(context) {
+	const orderForm = await fetch(`http://localhost:3300/api/order-form`)
+	const orderFormFields = await orderForm.json()
+
+	// if (!data) {
+	//     return {
+	//         notFound: true,
+	//     }
+	// }
+
+	return {
+		props: {
+			orderFormFields,
+			BACK_HOST: process.env.BACK_HOST,
+			BACK_PORT: process.env.BACK_PORT
+		}, // will be passed to the page component as props
+	}
 }
