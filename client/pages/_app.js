@@ -16,6 +16,8 @@ function MyApp({Component, pageProps}) {
 	}
 
 	const addCartItem = (item) => {
+		console.log(item)
+
 		setCartItems(prev => {
 			const cur = [...new Set([...prev, item])]
 			return cur

@@ -120,7 +120,7 @@ export default function AdminAddProductForm(props) {
 		})
 	}
 
-	const addThread = async () => {
+	const addThread = () => {
 		if (!threadValue.trim()) return
 
 		setThreads(prev => {
@@ -274,19 +274,19 @@ export default function AdminAddProductForm(props) {
 			<div className="mb-3">
 				<label className="form-label">Резьбы</label>
 				<ul className='list-group shadow-sm rounded-2'>
-					{threads.map(thread => {
-							return  (
-								<li className='list-group-item' key={thread.value}>
-									<div className="row">
-										<div className="col">
-											<b>{thread.value}</b>: {thread.price}$
-										</div>
-										<div className="col d-flex justify-content-end">
-											<button type="button" className="btn btn-danger" onClick={() => deleteThread(thread.value)}>Удалить</button>
-										</div>
+					{threads && threads.map(thread => {
+						return  (
+							<li className='list-group-item' key={thread.value}>
+								<div className="row">
+									<div className="col">
+										<b>{thread.value}</b>: {thread.price}$
 									</div>
-								</li>
-							)
+									<div className="col d-flex justify-content-end">
+										<button type="button" className="btn btn-danger" onClick={() => deleteThread(thread.value)}>Удалить</button>
+									</div>
+								</div>
+							</li>
+						)
 						}
 					)}
 				</ul>

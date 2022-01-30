@@ -18,6 +18,18 @@ export default function CartItem(props) {
 		props.removeItem(props.item)
 	}
 
+	let correctPrice
+	let chosenThread
+	if (props.item.chosenThread) {
+		correctPrice = props.item.chosenThread.price
+		chosenThread = props.item.chosenThread.value
+	} else if (props.item.thread) {
+		correctPrice = props.item.thread.sort((a,b) => a-b)[0].price
+		chosenThread = props.item.thread.sort((a,b) => a-b)[0].value
+	} else {
+		correctPrice = props.item.price
+	}
+
 	return (<>
 		<li className="list-group-item ">
 			<div className="d-flex align-items-center justify-content-between mb-2">
@@ -30,7 +42,12 @@ export default function CartItem(props) {
 					{props.item.title}
 				</p>
 				<p>
-					{props.item.price}$
+					{chosenThread && <>
+						{chosenThread}: {correctPrice}$
+					</>}
+					{!chosenThread && <>
+						{correctPrice}$
+					</>}
 				</p>
 				<button className="btn btn-danger" onClick={removeItem}>Remove</button>
 			</div>

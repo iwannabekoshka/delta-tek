@@ -8,6 +8,9 @@ export default function ProductEdit(props) {
 	const [specification, setSpecification] = useState('')
 	const [specificationValue, setSpecificationValue] = useState('')
 	const [specifications, setSpecifications] = useState([])
+	const [threadValue, setThreadValue] = useState('')
+	const [threadPrice, setThreadPrice] = useState('')
+	const [threads, setThreads] = useState(props.product.thread || [])
 
 	let accessToken, tokenType
 	useEffect(() => {
@@ -32,17 +35,22 @@ export default function ProductEdit(props) {
 	const submitEditForm = (event) => {
 		event.preventDefault()
 
+		console.log(threads)
+
 		const data = new FormData()
 		data.append("admin_id", "61df1efa1db126637c7be44b")
 
 		let obj = {
 			...product,
-			//TODO multifiles
+			thread: [...threads],
 			files: []
 		}
 
-		for (const key in product) {
+		for (const key in obj) {
 			if (key === 'specifications') {
+				obj[key] = JSON.stringify(obj[key])
+			}
+			if (key === 'thread') {
 				obj[key] = JSON.stringify(obj[key])
 			}
 
@@ -121,6 +129,32 @@ export default function ProductEdit(props) {
 				...prev,
 				specifications: [...prev.specifications].filter(s => s.name !== spec)
 			}
+		})
+	}
+
+	const addThread = () => {
+		if (!threadValue.trim()) return
+
+		setThreads(prev => {
+			const obj = {
+				value: threadValue,
+				price: threadPrice
+			}
+			let threadsLoc = [obj, ...prev]
+
+			threadsLoc = threadsLoc.filter((value1, index, self) =>
+					index === self.findIndex((t) => (
+						t.value === value1.value
+					))
+			)
+
+			return threadsLoc
+		})
+	}
+
+	const deleteThread = (value) => {
+		setThreads(prev => {
+			return [...prev].filter(thread => thread.value !== value)
 		})
 	}
 
@@ -220,6 +254,53 @@ export default function ProductEdit(props) {
 										</div>
 									</li>
 								)
+							}
+						)}
+					</ul>
+				</div>
+
+				{/*Резьба*/}
+				<div className="mb-3 row">
+					<div className="col">
+						<label htmlFor="threadValue" className="form-label">Резьба</label>
+						<input
+							type="text"
+							className="form-control"
+							id="threadValue"
+							value={threadValue}
+							onChange={(event) => setThreadValue(event.target.value)}
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="threadPrice" className="form-label">Цена</label>
+						<input
+							type="number"
+							className="form-control"
+							id="threadPrice"
+							value={threadPrice}
+							onChange={(event) => setThreadPrice(event.target.value)}
+						/>
+					</div>
+					<div className="col d-flex align-items-end">
+						<button type="button" className="btn btn-primary" onClick={addThread}>Добавить резьбу</button>
+					</div>
+				</div>
+				<div className="mb-3">
+					<label className="form-label">Резьбы</label>
+					<ul className='list-group shadow-sm rounded-2'>
+						{threads && threads.map(thread => {
+							return  (
+								<li className='list-group-item' key={thread.value}>
+									<div className="row">
+										<div className="col">
+											<b>{thread.value}</b>: {thread.price}$
+										</div>
+										<div className="col d-flex justify-content-end">
+											<button type="button" className="btn btn-danger" onClick={() => deleteThread(thread.value)}>Удалить</button>
+										</div>
+									</div>
+								</li>
+							)
 							}
 						)}
 					</ul>
