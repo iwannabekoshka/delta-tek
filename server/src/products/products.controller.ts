@@ -36,10 +36,13 @@ export class ProductsController {
     }))
     createProduct(@Body() dto: ProductDto, @UploadedFiles() files: { file1: Express.Multer.File, file2?: Express.Multer.File }) {
         const imagesPaths = []
-        const imagePath1 = 'img/' + files?.file1.filename
-        imagesPaths.push(imagePath1)
-        const imagePath2 = 'img/' + files?.file2?.filename
-        imagesPaths.push(imagePath2)
+        if (files.file1) {
+            const imagePath1 = 'img/' + files?.file1.filename
+            imagesPaths.push(imagePath1)
+            const imagePath2 = 'img/' + files?.file2?.filename
+            imagesPaths.push(imagePath2)
+        }
+
 
         return this._productsService.createProduct(dto, imagesPaths)
     }

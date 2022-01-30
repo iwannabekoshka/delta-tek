@@ -19,11 +19,13 @@ export class ProductsService {
     }
 
     async createProduct(input: ProductDto, images: Array<string>): Promise<Product> {
-        const { name, description, price, specifications, thread, admin_id } = input
+        const { name, description, price, specifications, admin_id } = input
+        let { thread } = input
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of specifications) {
+            thread = JSON.parse(thread)
+            for (const item of JSON.parse(specifications)) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
                 if(!specification){
@@ -91,7 +93,7 @@ export class ProductsService {
                     price,
                     images,
                     specifications: specifications_arr,
-                    thread,
+                    thread: thread as any,
                     admin,
                 })
             }
@@ -101,7 +103,7 @@ export class ProductsService {
                     description,
                     price,
                     specifications: specifications_arr,
-                    thread,
+                    thread: thread as any,
                     admin,
                 })
             }

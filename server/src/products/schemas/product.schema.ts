@@ -18,6 +18,8 @@ export class ProductSpecification {
 
 @Schema()
 export class Thread {
+    @Prop({ type: Types.ObjectId, required: true })
+    _id: string
 
     @Prop({ type: Number, required: true })
     value: number

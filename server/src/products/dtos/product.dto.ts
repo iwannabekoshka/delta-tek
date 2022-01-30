@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongoose'
 
-class Specification {
-    name: string
-    value: string
-}
-
-class Thread {
-    value: number
-    price: number
-}
+// class Specification {
+//     name: string
+//     value: string
+// }
+//
+// class Thread {
+//     value: number
+//     price: number
+// }
 
 export class ProductDto {
     name: string
