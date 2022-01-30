@@ -1,8 +1,8 @@
 import {env} from 'process'
 import {Tab, Tabs} from 'react-bootstrap'
 import {useEffect, useState} from 'react'
-import AdminLoginForm from '../components/AdminLoginForm'
-import AdminAddProductForm from '../components/AdminAddProductForm'
+import AdminLoginForm from '../../components/AdminLoginForm'
+import AdminAddProductForm from '../../components/AdminAddProductForm'
 import axios from 'axios';
 import Link from "next/link";
 
@@ -15,22 +15,10 @@ export default function Admin(props) {
 
 	const [authorized, setAuthorized] = useState(false)
 	const [products, setProducts] = useState(props.products)
-	const [orderFormFields, setOrderFormFields] = useState([
-		//TODO заменить на данные с сервера
-		{
-			id: "formField1",
-			formFieldType: 'email',
-			formFieldLabel: 'Email'
-		},
-		{
-			id: "formField2",
-			formFieldType: 'text',
-			formFieldLabel: 'Name'
-		}
-	])
+	const [orderFormFields, setOrderFormFields] = useState(props.orderFormFields)
 	const [addOrderFormItem, setAddOrderFormItem] = useState({
-		formFieldType: '',
-		formFieldLabel: ''
+		formFieldLabel: '',
+		formFieldPosition: ''
 	})
 
 	let accessToken, tokenType
@@ -116,13 +104,33 @@ export default function Admin(props) {
 	const submitAddOrderFormField = (event) => {
 		event.preventDefault()
 
-		setOrderFormFields(prev => {
-			return [
-				//TODO заменить генерацию id
-				{...addOrderFormItem, id: Math.random()},
-				...prev
-			]
+		fetch(`http://localhost:3300/api/order-form`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+			},
+			body: JSON.stringify({
+				name: addOrderFormItem.formFieldLabel,
+				number: addOrderFormItem.formFieldPosition
+			}),
 		})
+			.then(res => res.json())
+			.then(res => {
+				const newId = res._id
+
+				setOrderFormFields(prev => {
+					return [
+						...prev,
+						{
+							_id: newId,
+							name: addOrderFormItem.formFieldLabel,
+							number: addOrderFormItem.formFieldPosition
+						}
+					]
+				})
+				alert('Поле формы добавлено')
+			})
 	}
 
 	const changeAddOrderFormField = event=> {
@@ -138,21 +146,35 @@ export default function Admin(props) {
 	}
 
 	const removeOrderFormField = (id) => {
-		setOrderFormFields(prev => {
-			return [...prev].filter(formField => formField.id !== id)
+		fetch(`http://localhost:3300/api/order-form/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+			},
 		})
+			.then(res => res.json())
+			.then(res => {
+				setOrderFormFields(prev => {
+					return [...prev].filter(formField => formField._id !== id)
+				})
+				alert('Поле формы удалено')
+			})
+
+
 	}
 
 	const changeOrderFormField = (event, id) => {
-		const type = event.target.id.substring(0, event.target.id.length - 1); //тк добавил в конец 2
-		const value = event.target.value
+		const field = id.split('_')[0]
+		const _id = id.split('_')[1]
 
 		setOrderFormFields(prev => {
 			return [...prev].map(formField => {
-				if (formField.id === id) {
+				if (formField._id === _id) {
 					return {
 						...formField,
-						[type]: value
+						[field]: event.target.value,
+						_id,
 					}
 				}
 				return formField
@@ -160,10 +182,25 @@ export default function Admin(props) {
 		})
 	}
 
-	const submitOrderFormFields = () => {
-		console.log(orderFormFields)
-	}
+	const updateOrderFormField = (formField) => {
+		const { _id, name, number } = formField
 
+		fetch(`http://localhost:3300/api/order-form/${_id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `${sessionStorage.getItem('tokenType')} ${sessionStorage.getItem('accessToken')}`
+			},
+			body: JSON.stringify({
+				name,
+				number,
+			}),
+		})
+			.then(res => res.json())
+			.then(res => {
+				alert('Поле формы изменено')
+			})
+	}
 
 	return (<>
 		<div className='container pb-3'>
@@ -200,7 +237,10 @@ export default function Admin(props) {
 															)
 														})}
 													</ul>
-													<div className="d-flex justify-content-end h-100 align-items-end">
+													<div className="d-flex justify-content-between h-100 align-items-end">
+														<Link href={`admin/product/${product._id}`}>
+															<a className="btn btn-success">Редактировать</a>
+														</Link>
 														<button type="button" className="btn btn-danger" onClick={() => deleteProduct(product._id)}>Удалить</button>
 													</div>
 												</div>
@@ -249,17 +289,14 @@ export default function Admin(props) {
 							<h3>Добавление</h3>
 							<div className="row mb-2">
 								<div className="col">
-									<label htmlFor="formFieldType" className="form-label">Тип поля</label>
-									<select
-										className="form-select"
-										id="formFieldType"
+									<label htmlFor="formFieldPosition" className="form-label">Порядковый номер поля</label>
+									<input
+										id="formFieldPosition"
+										type="number"
+										className="form-control"
+										value={addOrderFormItem.formFieldPosition}
 										onChange={changeAddOrderFormField}
-									>
-										<option value="email">E-mail</option>
-										<option value="text">Текст</option>
-										<option value="address">Адрес</option>
-										<option value="tel">Телефон</option>
-									</select>
+									/>
 								</div>
 								<div className="col">
 									<label htmlFor="formFieldLabel" className="form-label">Название поля</label>
@@ -271,7 +308,13 @@ export default function Admin(props) {
 									/>
 								</div>
 								<div className="col d-flex align-items-end justify-content-end">
-									<button type="submit" className="btn btn-primary">Добавить</button>
+									<button
+										type="submit"
+										className="btn btn-primary"
+										onClick={submitAddOrderFormField}
+									>
+										Добавить
+									</button>
 								</div>
 							</div>
 						</form>
@@ -279,40 +322,36 @@ export default function Admin(props) {
 							<h3>Поля формы заказа</h3>
 							{orderFormFields.map(orderFormField => {
 								return (
-									<div className="row mb-2" key={orderFormField.id}>
+									<div className="row mb-2" key={orderFormField._id}>
 										<div className="col">
-											<label htmlFor="formFieldType2" className="form-label">Тип поля</label>
-											<select
-												id="formFieldType2"
-												className="form-select"
-												value={orderFormField.formFieldType}
-												onChange={(event) => changeOrderFormField(event, orderFormField.id)}
-											>
-												<option value="email">E-mail</option>
-												<option value="text">Текст</option>
-												<option value="address">Адрес</option>
-												<option value="tel">Телефон</option>
-											</select>
-										</div>
-										<div className="col">
-											<label htmlFor="formFieldLabel2" className="form-label">Название поля</label>
+											<label htmlFor={`number_${orderFormField._id}`} className="form-label">Порядковый номер поля</label>
 											<input
-												id="formFieldLabel2"
-												type="text"
+												id={`number_${orderFormField._id}`}
+												type="number"
 												className="form-control"
-												value={orderFormField.formFieldLabel}
-												onChange={(event) => changeOrderFormField(event, orderFormField.id)}
+												value={orderFormField.number}
+												onChange={(event) => changeOrderFormField(event, event.target.id)}
 											/>
 										</div>
-										<div className="col d-flex justify-content-end align-items-end">
-											<button className="btn btn-danger" onClick={() => removeOrderFormField(orderFormField.id)}>Удалить</button>
+										<div className="col">
+											<label htmlFor={`name_${orderFormField._id}`} className="form-label">Название поля</label>
+											<input
+												id={`name_${orderFormField._id}`}
+												type="text"
+												className="form-control"
+												value={orderFormField.name}
+												onChange={(event) => changeOrderFormField(event, event.target.id)}
+											/>
+										</div>
+										<div className="col d-flex align-items-end justify-content-end">
+											<button className="btn btn-primary" onClick={() => updateOrderFormField(orderFormField)}>Сохранить</button>
+										</div>
+										<div className="col d-flex align-items-end justify-content-end">
+											<button className="btn btn-danger" onClick={() => removeOrderFormField(orderFormField._id)}>Удалить</button>
 										</div>
 									</div>
 								)
 							})}
-							<div className="d-flex justify-content-end mt-5">
-								<button onClick={submitOrderFormFields} className="btn btn-primary">Сохранить</button>
-							</div>
 						</section>
 					</Tab>
 				</Tabs>
@@ -325,6 +364,9 @@ export async function getServerSideProps(context) {
 	const res = await fetch(`http://localhost:3300/api/products`)
 	const data = await res.json()
 
+	const responseForm = await fetch(`http://localhost:3300/api/order-form`)
+	const responseFormData = await responseForm.json()
+
 	// if (!data) {
 	//     return {
 	//         notFound: true,
@@ -334,6 +376,7 @@ export async function getServerSideProps(context) {
 	return {
 		props: {
 			products: data,
+			orderFormFields: responseFormData,
 			BACK_HOST: process.env.BACK_HOST,
 			BACK_PORT: process.env.BACK_PORT
 		}, // will be passed to the page component as props

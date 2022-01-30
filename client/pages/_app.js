@@ -41,6 +41,10 @@ function MyApp({Component, pageProps}) {
 		})
 	}
 
+	const clearCart = () => {
+		setCartItems([])
+	}
+
 	const setAuthParams = (accessToken, tokenType) => {
 		setAccessToken(prev => accessToken)
 		setTokenType(prev => tokenType)
@@ -60,6 +64,7 @@ function MyApp({Component, pageProps}) {
 					changeItemCount={changeItemCount}
 					setAuthParams={setAuthParams}
 					authParams={authParams}
+					clearCart={clearCart}
 				/>
 			</Layout>
 		</>
