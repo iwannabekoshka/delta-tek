@@ -13,7 +13,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common'
 import { ObjectId } from 'mongoose'
-import { FilesInterceptor } from '@nestjs/platform-express'
+import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 
 import { ProductsService } from './products.service'
 import { ProductDto } from './dtos/product.dto'
@@ -28,15 +28,19 @@ export class ProductsController {
 
     @Post()
     @UseGuards(AuthGuard)
-    @UseInterceptors(FilesInterceptor('files', MAX_FILES_COUNT, {
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'file1', maxCount: 1 },
+        { name: 'file2', maxCount: 1 },
+    ], {
         dest: path.resolve(__dirname, '../../../client/public/img'),
     }))
-    createProduct(@Body() dto: ProductDto, @UploadedFiles() files: Array<Express.Multer.File>) {
+    createProduct(@Body() dto: ProductDto, @UploadedFiles() files: { file1: Express.Multer.File, file2?: Express.Multer.File }) {
         const imagesPaths = []
-        files.forEach(file => {
-            const imagePath = 'img/' + file.filename
-            imagesPaths.push(imagePath)
-        })
+        const imagePath1 = 'img/' + files?.file1.filename
+        imagesPaths.push(imagePath1)
+        const imagePath2 = 'img/' + files?.file2?.filename
+        imagesPaths.push(imagePath2)
+
         return this._productsService.createProduct(dto, imagesPaths)
     }
 

@@ -15,6 +15,6 @@ export class ProductDto {
     description: string
     price: number
     specifications: Array<Specification>
-    thread: Array<Thread>
+    thread?: Array<Thread>
     admin_id: ObjectId
 }

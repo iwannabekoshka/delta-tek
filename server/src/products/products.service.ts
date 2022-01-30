@@ -19,7 +19,7 @@ export class ProductsService {
     }
 
     async createProduct(input: ProductDto, images: Array<string>): Promise<Product> {
-        const { name, description, price, specifications, admin_id } = input
+        const { name, description, price, specifications, thread, admin_id } = input
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
@@ -37,6 +37,7 @@ export class ProductsService {
                 images,
                 price,
                 specifications: specifications_arr,
+                thread,
                 admin,
             })
             return await product.save()
@@ -73,7 +74,7 @@ export class ProductsService {
     }
 
     async updateProduct(id: ObjectId, input: ProductDto, images: Array<string> | undefined ): Promise<any> {
-        const { name, description, price, specifications, admin_id } = input
+        const { name, description, price, specifications, thread, admin_id } = input
         let product: any
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
@@ -90,6 +91,7 @@ export class ProductsService {
                     price,
                     images,
                     specifications: specifications_arr,
+                    thread,
                     admin,
                 })
             }
@@ -99,6 +101,7 @@ export class ProductsService {
                     description,
                     price,
                     specifications: specifications_arr,
+                    thread,
                     admin,
                 })
             }
