@@ -20,7 +20,7 @@ import { RefreshToken, RefreshTokenDocument } from '../admins/schemas/refresh-to
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-const DEFAULT_ACCESS_TOKEN_TTL = 6000
+const DEFAULT_ACCESS_TOKEN_TTL = 60000
 
 @Injectable()
 export class AuthService {

@@ -28,22 +28,17 @@ export class ProductsController {
 
     @Post()
     @UseGuards(AuthGuard)
-    @UseInterceptors(FileFieldsInterceptor([
-        { name: 'file1', maxCount: 1 },
-        { name: 'file2', maxCount: 1 },
-    ], {
+    @UseInterceptors(FilesInterceptor('files[]', MAX_FILES_COUNT, {
         dest: path.resolve(__dirname, '../../../client/public/img'),
     }))
-    createProduct(@Body() dto: ProductDto, @UploadedFiles() files: { file1: Express.Multer.File, file2?: Express.Multer.File }) {
+    createProduct(@Body() dto: ProductDto, @UploadedFiles() files: Array<Express.Multer.File> ) {
         const imagesPaths = []
-        if (files.file1) {
-            const imagePath1 = 'img/' + files?.file1.filename
-            imagesPaths.push(imagePath1)
-            const imagePath2 = 'img/' + files?.file2?.filename
-            imagesPaths.push(imagePath2)
+        if (files.length > 0) {
+            files.forEach(file => {
+                const imagePath = 'img/' + file.filename
+                imagesPaths.push(imagePath)
+            })
         }
-
-
         return this._productsService.createProduct(dto, imagesPaths)
     }
 
@@ -59,7 +54,7 @@ export class ProductsController {
 
     @Put(':id')
     @UseGuards(AuthGuard)
-    @UseInterceptors(FilesInterceptor('files', MAX_FILES_COUNT, {
+    @UseInterceptors(FilesInterceptor('files[]', MAX_FILES_COUNT, {
         dest: path.resolve(__dirname, '../../../client/public/img'),
     }))
     updateProduct(@Param('id') id: ObjectId, @Body() dto: ProductDto, @UploadedFiles() files: Array<Express.Multer.File>) {
