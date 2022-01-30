@@ -1,6 +1,7 @@
 import Section from "../../components/layouts/Section";
 import {useRouter} from "next/router";
 import {useState} from "react";
+import ProductCarousel from "../../components/ProductCarousel";
 
 
 export default function Product(props) {
@@ -41,9 +42,7 @@ export default function Product(props) {
 			<div className="container">
 				<div className="row mb-4">
 					<div className="col-12 col-md-6">
-						<div className="item-img">
-							<img src={`/${props.product.image}`} className="img-fluid" alt="Good"/>
-						</div>
+						<ProductCarousel product={props.product} />
 					</div>
 					<div className="col-12 col-md-6">
 						<div className="my-2 d-flex justify-content-between align-items-center">
@@ -54,11 +53,11 @@ export default function Product(props) {
 								{inCart ? 'In Cart' : 'Add to Cart'}
 							</button>
 						</div>
-						<div className="">
+						<div className="p-2 mb-2 bg-light border shadow-sm rounded-2">
 							{threads.length > 0 && <h3>Threads:</h3>}
 							{threads.length > 0 && threads.map((thread, index) => {
 								return (
-									<div className="form-check mb-2">
+									<div className="form-check mb-2" key={index}>
 										<input className="form-check-input" type="radio" name="threads"
 										       id={thread.value}
 										       checked={thread.checked}

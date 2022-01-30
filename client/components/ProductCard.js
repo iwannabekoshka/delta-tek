@@ -11,7 +11,7 @@ export default function ProductCard(props) {
 				<div className="card-img" />
 				<div className="card-body">
 					<h5 className="card-title">{props.title}</h5>
-					<p className="card-text">{props.text}</p>
+					<p className="card-text">{props.text.substr(0, 70) + '...'}</p>
 					<p className="card-text">Price: {props.price}$</p>
 					<div className="card-buttons">
 						<Link href={`/product/${props._id}`}>
@@ -31,7 +31,7 @@ export default function ProductCard(props) {
 				}
 				.card-img {
 					height: 400px;
-					background-image: url(${props.image || '/img/flashhider.png'});
+					background-image: url(${props.images[0]});
 					background-size: 100%;
 					background-position: center;
 					background-repeat: no-repeat;

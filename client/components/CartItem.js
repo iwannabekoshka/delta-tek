@@ -35,7 +35,7 @@ export default function CartItem(props) {
 			<div className="d-flex align-items-center justify-content-between mb-2">
 				<Link href={`/product/${props.item._id}`}>
 					<a>
-						<img src={props.item.image} />
+						<img src={props.item.images[0]} />
 					</a>
 				</Link>
 				<p>

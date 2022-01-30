@@ -259,7 +259,7 @@ export default function Admin(props) {
 
                                               .card-img {
                                                 height: 400px;
-                                                background-image: url(${product.image || product.file || '/img/flashhider.png'});
+                                                background-image: url(${product.images[0]});
                                                 background-size: 100%;
                                                 background-position: center;
                                                 background-repeat: no-repeat;

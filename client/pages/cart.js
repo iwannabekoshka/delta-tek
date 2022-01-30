@@ -80,7 +80,7 @@ export default function Cart(props) {
 								<form onSubmit={submitForm} className="border shadow-sm rounded-2 p-2 bg-white">
 									{orderFormFields.map(orderFormField => {
 										return (
-											<div className="mb-3">
+											<div className="mb-3" key={orderFormField._id}>
 												<label htmlFor={orderFormField._id} className="form-label">{orderFormField.name}</label>
 												<input
 													type="text"
