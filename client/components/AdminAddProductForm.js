@@ -56,9 +56,32 @@ export default function AdminAddProductForm(props) {
 			files: formData.files
 		}
 
+		// onFileOneChange(fileChangeEvent) {
+		// 	this.fileOne = fileChangeEvent.target.files[0];
+		// }
+		// onFileTwoChange(fileChangeEvent) {
+		// 	this.fileTwo = fileChangeEvent.target.files[0];
+		// }
+		// onFileThreeChange(fileChangeEvent) {
+		// 	this.fileThree = fileChangeEvent.target.files[0];
+		// }
+		// async submitMultipleForm() {
+		// 	let formData = new FormData();
+		// 	formData.append('photos[]', this.fileOne, this.fileOne.name);
+		// 	formData.append('photos[]', this.fileTwo, this.fileTwo.name);
+		// 	formData.append('photos[]', this.fileThree, this.fileThree.name);
+
 		for (const key in formData) {
 			if (key === 'specifications') {
 				obj[key] = JSON.stringify(obj[key])
+			}
+
+			if (key === 'files') {
+				obj[key].forEach(file => {
+					data.append('files[]', file)
+				})
+
+				continue
 			}
 
 			data.append(key, obj[key])

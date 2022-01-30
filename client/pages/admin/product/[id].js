@@ -1,6 +1,7 @@
 import Section from "../../../components/layouts/Section";
 import {useEffect, useState} from "react";
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 
 export default function ProductEdit(props) {
@@ -11,6 +12,9 @@ export default function ProductEdit(props) {
 	const [threadValue, setThreadValue] = useState('')
 	const [threadPrice, setThreadPrice] = useState('')
 	const [threads, setThreads] = useState(props.product.thread || [])
+	const [changed, setChanged] = useState(false)
+
+	const router = useRouter()
 
 	let accessToken, tokenType
 	useEffect(() => {
@@ -35,15 +39,12 @@ export default function ProductEdit(props) {
 	const submitEditForm = (event) => {
 		event.preventDefault()
 
-		console.log(threads)
-
 		const data = new FormData()
 		data.append("admin_id", "61df1efa1db126637c7be44b")
 
 		let obj = {
 			...product,
 			thread: [...threads],
-			files: []
 		}
 
 		for (const key in obj) {
@@ -52,6 +53,13 @@ export default function ProductEdit(props) {
 			}
 			if (key === 'thread') {
 				obj[key] = JSON.stringify(obj[key])
+			}
+			if (key === 'files') {
+				obj[key].forEach(file => {
+					data.append('files[]', file)
+				})
+
+				continue
 			}
 
 			data.append(key, obj[key])
@@ -67,7 +75,14 @@ export default function ProductEdit(props) {
 				}
 			}
 			)
-			.then(res => console.log(res))
+			.then(res => {
+				if (res.status == 200) {
+					alert('Изменения сохранены')
+					router.reload(window.location.pathname)
+				} else {
+					alert('Произошла ошибка')
+				}
+			})
 	}
 
 	const changeProductData = event => {
@@ -186,7 +201,13 @@ export default function ProductEdit(props) {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="file" className="form-label d-block">Изображение</label>
-					<img className="d-block mb-3" src={`/${product.image}`} alt={product.name} width="300"/>
+					<div className="d-flex flex-wrap">
+						{product.images?.map(image => {
+							return (
+								<img className="d-block mb-3" src={`/${image}`} alt={image} width="150" key={image} />
+							)
+						})}
+					</div>
 					<input
 						className="form-control"
 						type="file"
