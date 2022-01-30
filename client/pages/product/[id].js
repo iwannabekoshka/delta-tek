@@ -53,8 +53,8 @@ export default function Product(props) {
 								{inCart ? 'In Cart' : 'Add to Cart'}
 							</button>
 						</div>
+						{threads.length > 0 && <h3>Threads</h3>}
 						<div className="p-2 mb-2 bg-light border shadow-sm rounded-2">
-							{threads.length > 0 && <h3>Threads:</h3>}
 							{threads.length > 0 && threads.map((thread, index) => {
 								return (
 									<div className="form-check mb-2" key={index}>
@@ -71,7 +71,7 @@ export default function Product(props) {
 							})}
 						</div>
 						<h3>Specifications</h3>
-						<ul className="list-group list-group-flush border shadow-sm rounded-2">
+						<ul className="list-group bg-light list-group-flush border shadow-sm rounded-2">
 							{props.product.specifications.map(specification => {
 								return  <li className="list-group-item" key={specification._id}>
 											<b>{specification.name}:</b> {specification.value}
@@ -81,9 +81,12 @@ export default function Product(props) {
 					</div>
 				</div>
 				<div className="row">
-					<p className="item-text border shadow-sm rounded-2 p-3">
-						{props.product.description}
-					</p>
+					<div className="col">
+						<h3>Description</h3>
+						<p className="item-text bg-light border shadow-sm rounded-2 p-3">
+							{props.product.description}
+						</p>
+					</div>
 				</div>
 			</div>
 		</Section>
