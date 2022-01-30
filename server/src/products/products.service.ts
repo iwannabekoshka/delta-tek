@@ -76,14 +76,19 @@ export class ProductsService {
     }
 
     async updateProduct(id: ObjectId, input: ProductDto, images: Array<string> | undefined ): Promise<any> {
-        const { name, description, price, specifications, thread, admin_id } = input
+        const { name, description, price, specifications, admin_id } = input
+        let { thread } = input
         let product: any
         try {
             const admin = await this._adminsService.getAdminById(admin_id)
             const specifications_arr = []
-            for (const item of specifications) {
+            thread = JSON.parse(thread)
+            for (const item of JSON.parse(specifications)) {
                 const { value, name } = item
                 const specification = await this._specificationsService.getSpecificationByName(name)
+                if(!specification){
+                    throw new NotFoundException('Specification not found')
+                }
                 specifications_arr.push({ _id: specification._id, name: specification.name, value })
             }
             if (images.length > 0){
